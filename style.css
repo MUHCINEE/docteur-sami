@@ -1,7 +1,7 @@
 
 :root {
-  --primary-color: #48D1CC; /* اللون الجديد ديالك */
-  --primary-rgb: 72, 209, 204; /* نفس اللون بنظام RGB للإفكتات الشفافة */
+  --primary-color: #48D1CC; 
+  --primary-rgb: 72, 209, 204; 
   --bg-sand: #FBF8F2;
   --text-dark: #2B2A26;
   --accent-gold: #C08552;
