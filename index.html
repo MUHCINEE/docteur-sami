@@ -9,6 +9,9 @@
 <meta name="keywords" content="Généraliste Tanger, Urgences Tanger, Diabétologue Tanger, Consultation à domicile Tanger, ECG Tanger, Echographie Tanger, Insulinorésistance Tanger, Obésité Tanger, طبيب عام طنجة, مستعجلات طنجة, اختصاصي في السكري بطنجة">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.tailwindcss.com">
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="preload" as="image" href="images/img2.jpeg" fetchpriority="high">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -48,7 +51,7 @@
     <!-- Logo & Title -->
     <a href="#" class="flex items-center gap-3">
       <div class="h-12 flex items-center justify-center">
-        <img src="logos/logo.PNG" alt="TabibeKoum Logo" class="h-full w-auto object-contain mix-blend-multiply">
+        <img src="logos/logo.PNG" alt="TabibeKoum Logo" decoding="async" class="h-full w-auto object-contain mix-blend-multiply">
       </div>
       <div>
         <p class="font-serif text-lg leading-tight text-forest-900">Dr. Khettab Sami</p>
@@ -67,19 +70,17 @@
       <a href="#carte" class="nav-link">Localisation</a>
     </nav>
 
-    <!-- Right Side (Rendez-vous + Burger Button) -->
     <div class="flex items-center gap-3">
       <a href="#rdv" class="bg-forest-600 hover:bg-forest-700 text-white px-5 py-2 rounded-full text-sm font-semibold transition">Rendez-vous</a>
       
-      <!-- البوطون ديال 3 د الأسطر -->
-      <button id="mobileMenuBtn" type="button" class="lg:hidden p-2 text-ink hover:text-brand transition-colors focus:outline-none cursor-pointer">
+      <button id="mobileMenuBtn" type="button" aria-label="Ouvrir le menu" class="lg:hidden p-2 text-ink hover:text-brand transition-colors focus:outline-none cursor-pointer">
         <i data-lucide="menu" id="menuIcon" class="w-7 h-7"></i>
       </button>
     </div>
   </div>
 
   <!-- Mobile Dropdown Menu -->
-  <div id="mobileMenu" class="hidden lg:hidden bg-cream border-t border-forest-100 px-6 py-4 flex flex-col gap-3 text-base font-semibold text-ink shadow-lg">
+  <div id="mobileMenu" class="lg:hidden bg-cream border-t border-forest-100 px-6 py-4 flex flex-col gap-3 text-base font-semibold text-ink shadow-lg">
     <a href="#apropos" class="hover:text-brand transition-colors py-1">À Propos</a>
     <a href="indexDrSami.html" class="hover:text-brand transition-colors py-1">Dr sami</a>
     <a href="indexCentre.html" class="hover:text-brand transition-colors py-1">Centre</a>
@@ -122,7 +123,7 @@
 
     <div class="relative">
       <div class="rounded-2xl overflow-hidden shadow-xl border-8 border-white">
-        <img src="images/img2.jpeg" alt="Cabinet du Dr Khettab Sami — Tabibe Koum, Tanger" class="w-full h-[420px] object-cover">
+        <img src="images/img2.jpeg" alt="Cabinet du Dr Khettab Sami — Tabibe Koum, Tanger" width="640" height="420" decoding="async" fetchpriority="high" class="w-full h-[420px] object-cover">
       </div>
       <div class="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-4 flex items-center gap-3 border border-forest-100">
         <div class="w-11 h-11 rounded-full bg-forest-100 flex items-center justify-center"><i data-lucide="heart-pulse" class="w-5 h-5 text-forest-600"></i></div>
@@ -160,8 +161,8 @@
 <!-- ============ ABOUT ============ -->
 <section id="apropos" class="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-14 items-center">
   <div class="grid grid-cols-2 gap-4">
-    <img src="images/img16.jpeg" alt="Salle d'examen du cabinet" class="rounded-xl object-cover h-64 w-full shadow-md">
-    <img src="images/img17.jpeg" alt="Équipement d'échographie du cabinet" class="rounded-xl object-cover h-64 w-full shadow-md mt-8">
+    <img src="images/img16.jpeg" alt="Salle d'examen du cabinet" width="600" height="256" loading="lazy" decoding="async" class="rounded-xl object-cover h-64 w-full shadow-md">
+    <img src="images/img17.jpeg" alt="Équipement d'échographie du cabinet" width="600" height="256" loading="lazy" decoding="async" class="rounded-xl object-cover h-64 w-full shadow-md mt-8">
   </div>
   <div>
     <div class="divider-leaf mb-4"></div>
@@ -420,7 +421,7 @@
     <!-- COLONNE 1: LOGO & NOM -->
     <div>
       <!-- اللوغو ديالك (بدل images/logo.png بمسار اللوغو الصحيح عندك) -->
-      <img src="logos/logo.PNG" alt="Logo Dr. Khettab Sami" class="h-14 w-auto mb-3 object-contain">
+      <img src="logos/logo.PNG" alt="Logo Dr. Khettab Sami" width="120" height="56" loading="lazy" decoding="async" class="h-14 w-auto mb-3 object-contain">
       <p class="font-serif text-xl mb-2">Dr. Khettab Sami</p>
       <p class="text-forest-100/70 text-sm">Médecin Généraliste, Urgentiste & Diabétologue à Tanger.</p>
     </div>
@@ -489,11 +490,6 @@
     &copy; 2026 Dr. Khettab Sami — Tabibe Koum. Tous droits réservés.
   </div>
 </footer>
-
-<script>
-  // Initialisation des icônes Lucide
-  lucide.createIcons();
-</script>
 
 </body>
 </html>

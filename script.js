@@ -33,28 +33,43 @@ document.addEventListener('DOMContentLoaded', function () {
     lucide.createIcons();
   }
 
-  // 2. Gestion du Menu Mobile
+  // 2. Gestion du Menu Mobile (ouverture/fermeture animée en CSS via la classe .open)
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
   const mobileMenu = document.getElementById('mobileMenu');
 
   if (mobileMenuBtn && mobileMenu) {
+    function setMenuOpen(isOpen) {
+      mobileMenu.classList.toggle('open', isOpen);
+      mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
+    }
+
+    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    mobileMenuBtn.setAttribute('aria-controls', 'mobileMenu');
+
     mobileMenuBtn.addEventListener('click', function (e) {
       e.stopPropagation();
-      mobileMenu.classList.toggle('hidden');
+      setMenuOpen(!mobileMenu.classList.contains('open'));
     });
 
     // سد الموني عند الضغط على أي رابط
     const mobileLinks = mobileMenu.querySelectorAll('a');
     mobileLinks.forEach(function (link) {
       link.addEventListener('click', function () {
-        mobileMenu.classList.add('hidden');
+        setMenuOpen(false);
       });
     });
 
     // سد الموني إلا كليكا المستخدم فشي بلاصة خاوية فـ الصفحة
     document.addEventListener('click', function (e) {
       if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-        mobileMenu.classList.add('hidden');
+        setMenuOpen(false);
+      }
+    });
+
+    // سد الموني إلا رجع المستخدم لعرض ديسكتوب (تفادي بقاء القائمة مفتوحة)
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024) {
+        setMenuOpen(false);
       }
     });
   }

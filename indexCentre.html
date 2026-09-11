@@ -6,6 +6,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cabinet Médical - Galerie & Équipements</title>
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://unpkg.com">
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -44,12 +46,44 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    html {
-  scroll-behavior: smooth;
-}
+    /* scroll-behavior: smooth est déjà géré par la classe "scroll-smooth"
+       sur <html> (voir plus haut) — pas besoin de la redéclarer ici. */
+    /* Header sticky : compositing sur son propre calque pour un scroll fluide */
+    header {
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    /* Menu mobile : slide-down + fade-in fluide au lieu d'un toggle instantané */
+    #mobileMenu {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.25s ease,
+                  transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: max-height, opacity, transform;
+    }
+
+    #mobileMenu.open {
+      max-height: 500px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #mobileMenuBtn i {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #mobileMenuBtn[aria-expanded="true"] i {
+      transform: rotate(90deg);
+    }
+
     /* Carousel 3D Styles */
     .carousel-card {
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+      will-change: transform, opacity;
       visibility: hidden;
       opacity: 0;
       pointer-events: none;
@@ -138,7 +172,7 @@
   <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
     <a href="index.html" class="flex items-center gap-3 group">
       <div class="h-12 flex items-center justify-center">
-        <img src="logos/logo.PNG" alt="TabibeKoum Logo" class="h-full w-auto object-contain mix-blend-multiply">
+        <img src="logos/logo.PNG" alt="TabibeKoum Logo" decoding="async" class="h-full w-auto object-contain mix-blend-multiply">
       </div>
       <div>
         <p class="font-serif text-lg leading-tight text-forest-900 font-bold group-hover:text-brand-dark transition-colors">Dr. Khettab Sami</p>
@@ -159,7 +193,6 @@
       </a>
       <a href="index.html#rdv" class="bg-brand hover:bg-brand-dark text-slate-900 hover:text-white px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 shadow-sm">Rendez-vous</a>
 
-      <!-- البوطون ديال 3 د الأسطر -->
       <button id="mobileMenuBtn" type="button" aria-label="Toggle Menu" class="lg:hidden p-2 text-ink hover:text-brand transition-colors focus:outline-none cursor-pointer z-50">
         <i data-lucide="menu" class="w-7 h-7 pointer-events-none"></i>
       </button>
@@ -167,7 +200,7 @@
   </div>
 
   <!-- Mobile Dropdown Menu -->
-  <div id="mobileMenu" class="hidden lg:hidden bg-cream border-t border-forest-100 px-6 py-4 flex flex-col gap-3 text-base font-semibold text-ink shadow-lg w-full left-0 top-full">
+  <div id="mobileMenu" class="lg:hidden bg-cream border-t border-forest-100 px-6 py-4 flex flex-col gap-3 text-base font-semibold text-ink shadow-lg w-full left-0 top-full">
     <a href="index.html" class="hover:text-brand transition-colors py-2 block">Accueil</a>
     <a href="#contact" class="hover:text-brand transition-colors py-2 block">Contact</a>
   </div>
@@ -205,57 +238,57 @@
       
       <!-- CARD 1 -->
       <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
-        <img src="images/img1.jpeg" alt="Équipement 1" class="w-full h-full object-cover">
+        <img src="images/img1.jpeg" alt="Équipement 1" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 2 -->
       <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
-        <img src="images/img2.jpeg" alt="Équipement 2" class="w-full h-full object-cover">
+        <img src="images/img2.jpeg" alt="Équipement 2" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 3 -->
       <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
-        <img src="images/img3.jpeg" alt="Équipement 3" class="w-full h-full object-cover">
+        <img src="images/img3.jpeg" alt="Équipement 3" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 4 -->
       <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
-        <img src="images/img4.jpeg" alt="Équipement 4" class="w-full h-full object-cover">
+        <img src="images/img4.jpeg" alt="Équipement 4" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 5 -->
       <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
-        <img src="images/img5.jpeg" alt="Équipement 5" class="w-full h-full object-cover">
+        <img src="images/img5.jpeg" alt="Équipement 5" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 6 -->
       <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
-        <img src="images/img6.jpeg" alt="Équipement 6" class="w-full h-full object-cover">
+        <img src="images/img6.jpeg" alt="Équipement 6" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 8 -->
       <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
-        <img src="images/img8.jpeg" alt="Équipement 8" class="w-full h-full object-cover">
+        <img src="images/img8.jpeg" alt="Équipement 8" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 9 -->
       <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
-        <img src="images/img9.jpeg" alt="Équipement 9" class="w-full h-full object-cover">
+        <img src="images/img9.jpeg" alt="Équipement 9" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 10 -->
       <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
-        <img src="images/img10.jpeg" alt="Équipement 10" class="w-full h-full object-cover">
+        <img src="images/img10.jpeg" alt="Équipement 10" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 11 -->
       <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
-        <img src="images/img11.jpeg" alt="Équipement 11" class="w-full h-full object-cover">
+        <img src="images/img11.jpeg" alt="Équipement 11" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 12 -->
       <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
-        <img src="images/img12.jpeg" alt="Équipement 12" class="w-full h-full object-cover">
+        <img src="images/img12.jpeg" alt="Équipement 12" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
     </div>
@@ -324,7 +357,7 @@
       
       <!-- COLONNE 1: LOGO & NOM -->
       <div>
-        <img src="logos/logo.PNG" alt="Logo Dr. Khettab Sami" class="h-14 w-auto mb-3 object-contain mix-blend-lighten">
+        <img src="logos/logo.PNG" alt="Logo Dr. Khettab Sami" width="120" height="56" loading="lazy" decoding="async" class="h-14 w-auto mb-3 object-contain mix-blend-lighten">
         <p class="font-serif text-xl mb-2 font-bold text-brand">Dr. Khettab Sami</p>
         <p class="text-forest-100/70 text-sm">Médecin Généraliste, Urgentiste & Diabétologue à Tanger.</p>
       </div>
@@ -410,24 +443,39 @@
     const mobileMenu = document.getElementById('mobileMenu');
 
     if (mobileMenuBtn && mobileMenu) {
+      function setMenuOpen(isOpen) {
+        mobileMenu.classList.toggle('open', isOpen);
+        mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
+      }
+
+      mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      mobileMenuBtn.setAttribute('aria-controls', 'mobileMenu');
+
       mobileMenuBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        mobileMenu.classList.toggle('hidden');
+        setMenuOpen(!mobileMenu.classList.contains('open'));
       });
 
       // إغلاق القائمة عند الضغط على أي رابط
       const mobileLinks = mobileMenu.querySelectorAll('a');
       mobileLinks.forEach((link) => {
         link.addEventListener('click', () => {
-          mobileMenu.classList.add('hidden');
+          setMenuOpen(false);
         });
       });
 
       // إغلاق القائمة عند الضغط خارجها
       document.addEventListener('click', (e) => {
         if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-          mobileMenu.classList.add('hidden');
+          setMenuOpen(false);
+        }
+      });
+
+      // إغلاق القائمة عند الرجوع لعرض ديسكتوب
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024) {
+          setMenuOpen(false);
         }
       });
     }
