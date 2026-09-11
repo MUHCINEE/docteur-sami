@@ -1,3 +1,12 @@
+
+:root {
+  --primary-color: #48D1CC; /* اللون الجديد ديالك */
+  --primary-rgb: 72, 209, 204; /* نفس اللون بنظام RGB للإفكتات الشفافة */
+  --bg-sand: #FBF8F2;
+  --text-dark: #2B2A26;
+  --accent-gold: #C08552;
+}
+
 /* ==========================================================================
    1. STYLES DE BASE ET SCRIPT DU SCROLL
    ========================================================================== */
@@ -6,8 +15,8 @@ html {
 }
 
 body {
-  background: #FBF8F2;
-  color: #2B2A26;
+  background: var(--bg-sand);
+  color: var(--text-dark);
 }
 
 .ar {
@@ -21,7 +30,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #FBF8F2;
+  background: var(--bg-sand);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -43,7 +52,7 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #3B7A57;
+  background: var(--primary-color);
   margin-right: 8px;
   vertical-align: middle;
   animation: pulse-dot 2s infinite ease-in-out;
@@ -63,7 +72,7 @@ body {
 .divider-leaf {
   width: 44px;
   height: 2px;
-  background: #3B7A57;
+  background: var(--primary-color);
   position: relative;
 }
 
@@ -75,7 +84,7 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50% 0;
-  background: #C08552;
+  background: var(--accent-gold);
   transition: transform 0.4s ease;
 }
 
@@ -98,12 +107,34 @@ body {
   bottom: -6px;
   width: 0;
   height: 2px;
-  background: #3B7A57;
+  background: var(--primary-color);
   transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .nav-link:hover::after {
   width: 100%;
+}
+
+/* Mobile Menu Animation & Borders */
+#mobile-menu {
+  animation: slideDown 0.3s ease-out forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-nav-link {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(var(--primary-rgb), 0.2);
+  display: block;
 }
 
 /* ==========================================================================
@@ -115,8 +146,8 @@ input, textarea, select {
 }
 
 input:focus, textarea:focus, select:focus {
-  box-shadow: 0 0 0 3px rgba(59, 122, 87, 0.2);
-  border-color: #3B7A57;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
+  border-color: var(--primary-color);
 }
 
 /* ==========================================================================
@@ -130,7 +161,7 @@ input:focus, textarea:focus, select:focus {
 .service-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.08);
-  border-color: rgba(59, 122, 87, 0.4);
+  border-color: rgba(var(--primary-rgb), 0.4);
 }
 
 /* Galerie d'images (Card Frame) */
@@ -152,14 +183,14 @@ input:focus, textarea:focus, select:focus {
   content: '';
   position: absolute;
   inset: 0;
-  border: 1px solid rgba(59, 122, 87, 0.25);
+  border: 1px solid rgba(var(--primary-rgb), 0.25);
   border-radius: 0.75rem;
   pointer-events: none;
   transition: border-color 0.3s ease;
 }
 
 .card-frame:hover::after {
-  border-color: #3B7A57;
+  border-color: var(--primary-color);
 }
 
 /* Effet Micro-Interaction sur les Boutons */
@@ -190,7 +221,7 @@ button:active, a:active {
   }
 }
 
-/* Système Reveal au Scroll (à coupler avec un petit JS ou IntersectionObserver) */
+/* Système Reveal au Scroll */
 .reveal {
   opacity: 0;
   transform: translateY(30px);
