@@ -44,6 +44,9 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
+    html {
+  scroll-behavior: smooth;
+}
     /* Carousel 3D Styles */
     .carousel-card {
       transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -131,32 +134,44 @@
 <body class="bg-cream text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
 
   <!-- ================= HEADER ================= -->
-  <header class="sticky top-0 z-40 bg-cream/90 backdrop-blur border-b border-forest-100 shadow-sm">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="index.html" class="flex items-center gap-3 group">
-        <div class="h-12 flex items-center justify-center">
-          <img src="logos/logo.PNG" alt="TabibeKoum Logo" class="h-full w-auto object-contain mix-blend-multiply">
-        </div>
-        <div>
-          <p class="font-serif text-lg leading-tight text-forest-900 font-bold group-hover:text-brand-dark transition-colors">Dr. Khettab Sami</p>
-          <p class="text-xs text-forest-700 tracking-wide">Cabinet Tabibe Koum · Tanger</p>
-        </div>
-      </a>
-
-      <!-- Navigation -->
-      <nav class="hidden lg:flex items-center gap-10 text-base sm:text-lg font-semibold text-ink">
-        <a href="index.html" class="nav-link">Accueil</a>
-        <a href="#contact" class="nav-link">Contact</a>
-      </nav>
-
-      <div class="flex items-center gap-3">
-        <a href="https://wa.me/212650671855" target="_blank" rel="noopener" class="hidden sm:flex items-center gap-2 border border-brand text-slate-900 px-4 py-2 rounded-full text-sm font-semibold hover:bg-brand hover:text-white transition-all duration-200">
-          <i data-lucide="message-circle" class="w-4 h-4 text-brand-dark group-hover:text-white"></i> WhatsApp
-        </a>
-        <a href="index.html#rdv" class="bg-brand hover:bg-brand-dark text-slate-900 hover:text-white px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 shadow-sm">Rendez-vous</a>
+<header class="sticky top-0 z-40 bg-cream/90 backdrop-blur border-b border-forest-100 shadow-sm">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3 group">
+      <div class="h-12 flex items-center justify-center">
+        <img src="logos/logo.PNG" alt="TabibeKoum Logo" class="h-full w-auto object-contain mix-blend-multiply">
       </div>
+      <div>
+        <p class="font-serif text-lg leading-tight text-forest-900 font-bold group-hover:text-brand-dark transition-colors">Dr. Khettab Sami</p>
+        <p class="text-xs text-forest-700 tracking-wide">Cabinet Tabibe Koum · Tanger</p>
+      </div>
+    </a>
+
+    <!-- Navigation Desktop -->
+    <nav class="hidden lg:flex items-center gap-10 text-base sm:text-lg font-semibold text-ink">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+
+    <!-- Right Side -->
+    <div class="flex items-center gap-3">
+      <a href="https://wa.me/212650671855" target="_blank" rel="noopener" class="hidden sm:flex items-center gap-2 border border-brand text-slate-900 px-4 py-2 rounded-full text-sm font-semibold hover:bg-brand hover:text-white transition-all duration-200">
+        <i data-lucide="message-circle" class="w-4 h-4 text-brand-dark group-hover:text-white"></i> WhatsApp
+      </a>
+      <a href="index.html#rdv" class="bg-brand hover:bg-brand-dark text-slate-900 hover:text-white px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 shadow-sm">Rendez-vous</a>
+
+      <!-- البوطون ديال 3 د الأسطر -->
+      <button id="mobileMenuBtn" type="button" aria-label="Toggle Menu" class="lg:hidden p-2 text-ink hover:text-brand transition-colors focus:outline-none cursor-pointer z-50">
+        <i data-lucide="menu" class="w-7 h-7 pointer-events-none"></i>
+      </button>
     </div>
-  </header>
+  </div>
+
+  <!-- Mobile Dropdown Menu -->
+  <div id="mobileMenu" class="hidden lg:hidden bg-cream border-t border-forest-100 px-6 py-4 flex flex-col gap-3 text-base font-semibold text-ink shadow-lg w-full left-0 top-full">
+    <a href="index.html" class="hover:text-brand transition-colors py-2 block">Accueil</a>
+    <a href="#contact" class="hover:text-brand transition-colors py-2 block">Contact</a>
+  </div>
+</header>
 
   <!-- ================= SECTION 1: PRESENTATION (WITH ANIMATED CARD) ================= -->
   <section class="py-12 md:py-16 px-6 max-w-5xl mx-auto">
@@ -380,63 +395,98 @@
   </footer>
 
   <!-- ================= CAROUSEL ROTATION JAVASCRIPT ================= -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Initialize Lucide Icons
-      if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-      }
+    
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Lucide Icons
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
 
-      const cards = Array.from(document.querySelectorAll('.carousel-card'));
-      let currentIndex = 0;
-      let intervalId = null;
+    // ==========================================
+    // 1. Mobile Menu Logic (3 ديال الأسطر)
+    // ==========================================
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
 
-      function updateCarousel() {
-        cards.forEach((card) => {
-          card.classList.remove('pos-left', 'pos-center', 'pos-right', 'border-2', 'border-brand', 'shadow-2xl');
-          card.classList.add('border', 'border-brand/20');
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        mobileMenu.classList.toggle('hidden');
+      });
+
+      // إغلاق القائمة عند الضغط على أي رابط
+      const mobileLinks = mobileMenu.querySelectorAll('a');
+      mobileLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
         });
+      });
 
-        const total = cards.length;
-        const leftIndex = (currentIndex - 1 + total) % total;
-        const centerIndex = currentIndex;
-        const rightIndex = (currentIndex + 1) % total;
-
-        cards[leftIndex].classList.add('pos-left');
-        
-        cards[centerIndex].classList.add('pos-center', 'border-2', 'border-brand', 'shadow-2xl');
-        cards[centerIndex].classList.remove('border-brand/20');
-
-        cards[rightIndex].classList.add('pos-right');
-      }
-
-      function nextSlide() {
-        currentIndex = (currentIndex + 1) % cards.length;
-        updateCarousel();
-      }
-
-      function startAutoPlay() {
-        if (!intervalId) {
-          intervalId = setInterval(nextSlide, 2000);
+      // إغلاق القائمة عند الضغط خارجها
+      document.addEventListener('click', (e) => {
+        if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+          mobileMenu.classList.add('hidden');
         }
-      }
+      });
+    }
 
-      function stopAutoPlay() {
-        clearInterval(intervalId);
-        intervalId = null;
-      }
+    // ==========================================
+    // 2. Carousel Logic (الكود ديالك كما هو)
+    // ==========================================
+    const cards = Array.from(document.querySelectorAll('.carousel-card'));
+    let currentIndex = 0;
+    let intervalId = null;
 
-      // Pause au survol de la souris (Hover)
-      const wrapper = document.getElementById('carouselWrapper');
-      if (wrapper) {
-        wrapper.addEventListener('mouseenter', stopAutoPlay);
-        wrapper.addEventListener('mouseleave', startAutoPlay);
-      }
+    function updateCarousel() {
+      cards.forEach((card) => {
+        card.classList.remove('pos-left', 'pos-center', 'pos-right', 'border-2', 'border-brand', 'shadow-2xl');
+        card.classList.add('border', 'border-brand/20');
+      });
 
-      // Initialisation
+      const total = cards.length;
+      const leftIndex = (currentIndex - 1 + total) % total;
+      const centerIndex = currentIndex;
+      const rightIndex = (currentIndex + 1) % total;
+
+      cards[leftIndex].classList.add('pos-left');
+      
+      cards[centerIndex].classList.add('pos-center', 'border-2', 'border-brand', 'shadow-2xl');
+      cards[centerIndex].classList.remove('border-brand/20');
+
+      cards[rightIndex].classList.add('pos-right');
+    }
+
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % cards.length;
+      updateCarousel();
+    }
+
+    function startAutoPlay() {
+      if (!intervalId) {
+        intervalId = setInterval(nextSlide, 2000);
+      }
+    }
+
+    function stopAutoPlay() {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+
+    // Pause au survol de la souris (Hover)
+    const wrapper = document.getElementById('carouselWrapper');
+    if (wrapper) {
+      wrapper.addEventListener('mouseenter', stopAutoPlay);
+      wrapper.addEventListener('mouseleave', startAutoPlay);
+    }
+
+    // Initialisation du Carousel
+    if (cards.length > 0) {
       updateCarousel();
       startAutoPlay();
-    });
-  </script>
+    }
+  });
+</script>
 </body>
 </html>

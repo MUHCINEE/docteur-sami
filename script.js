@@ -25,35 +25,66 @@ tailwind.config = {
     }
   }
 }
+// Function pour le formulaire WhatsApp
+document.addEventListener('DOMContentLoaded', function () {
+  
+  // 1. Initialiser les icônes Lucide (إن وجدت)
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
 
-// Envoi du formulaire de rendez-vous vers WhatsApp
+  // 2. Gestion du Menu Mobile
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  if (mobileMenuBtn && mobileMenu) {
+    mobileMenuBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // سد الموني عند الضغط على أي رابط
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+    mobileLinks.forEach(function (link) {
+      link.addEventListener('click', function () {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+
+    // سد الموني إلا كليكا المستخدم فشي بلاصة خاوية فـ الصفحة
+    document.addEventListener('click', function (e) {
+      if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+        mobileMenu.classList.add('hidden');
+      }
+    });
+  }
+
+  // 3. Formulaire WhatsApp (إذا كان موجوداً في الصفحة)
+  initRdvForm();
+});
+
 function initRdvForm() {
   const form = document.getElementById('rdv-form');
-  if (!form) return;
+  if (!form) return; // إلا مالقاش الفورم مايدير والو ومايعطيش Error
 
   form.addEventListener('submit', function (event) {
     event.preventDefault();
 
-    const nom = document.getElementById('rdv-nom').value;
-    const tel = document.getElementById('rdv-tel').value;
-    const motif = document.getElementById('rdv-motif').value;
-    const date = document.getElementById('rdv-date').value;
+    const nomEl = document.getElementById('rdv-nom');
+    const telEl = document.getElementById('rdv-tel');
+    const motifEl = document.getElementById('rdv-motif');
+    const dateEl = document.getElementById('rdv-date');
+
+    if (!nomEl || !telEl || !motifEl || !dateEl) return;
 
     const message =
-      'Bonjour Dr. Khettab, je souhaite prendre rendez-vous.\n' +
-      'Nom: ' + nom + '\n' +
-      'Téléphone: ' + tel + '\n' +
-      'Motif: ' + motif + '\n' +
-      'Créneau souhaité: ' + date;
+      'Bonjour Dr.Sami Khettab, je souhaite prendre rendez-vous.\n' +
+      'Nom : ' + nomEl.value + '\n' +
+      'Téléphone : ' + telEl.value + '\n' +
+      'Motif : ' + motifEl.value + '\n' +
+      'Créneau souhaité : ' + dateEl.value;
 
     const url = 'https://wa.me/212650671855?text=' + encodeURIComponent(message);
     window.open(url, '_blank');
   });
 }
-
-// Initialisation au chargement de la page
-document.addEventListener('DOMContentLoaded', function () {
-  lucide.createIcons();
-  initRdvForm();
-});
-

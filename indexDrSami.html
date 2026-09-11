@@ -16,33 +16,52 @@
 <script src="script.js"></script>
 </head>
 <!-- ============ HEADER / NAV ============ -->
-<header class="sticky top-0 z-40 bg-cream/90 backdrop-blur border-b border-forest-100">
+<header class="sticky top-0 z-40 bg-cream/90 backdrop-blur border-b border-forest-100 shadow-sm">
   <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    
+    <!-- Logo & Title -->
     <a href="#" class="flex items-center gap-3">
-<div class="h-12 flex items-center justify-center">
-  <img src="logos/logo.PNG" alt="TabibeKoum Logo" class="h-full w-auto object-contain mix-blend-multiply">
-</div>
+      <div class="h-12 flex items-center justify-center">
+        <img src="logos/logo.PNG" alt="TabibeKoum Logo" class="h-full w-auto object-contain mix-blend-multiply">
+      </div>
       <div>
         <p class="font-serif text-lg leading-tight text-forest-900">Dr. Khettab Sami</p>
         <p class="text-xs text-forest-600 tracking-wide">Cabinet Tabibe Koum · Tanger</p>
       </div>
     </a>
+
+    <!-- Desktop Navigation -->
     <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-ink">
-
-        <a href="index.html#a-propos" class="nav-link">Accueil</a>
-        <a href="#a-propos" class="nav-link">À Propos</a>
-        <a href="#specialites" class="nav-link">Spécialités</a>
-        <a href="#certificates" class="nav-link">Certificates</a>
-        <a href="#carte" class="nav-link">Localisation</a>
-        <a href="indexCentre.html" class="nav-link">Centre</a>
-
+      <a href="index.html#a-propos" class="nav-link">Accueil</a>
+      <a href="#a-propos" class="nav-link">À Propos</a>
+      <a href="#specialites" class="nav-link">Spécialités</a>
+      <a href="#certificates" class="nav-link">Certificates</a>
+      <a href="#carte" class="nav-link">Localisation</a>
+      <a href="indexCentre.html" class="nav-link">Centre</a>
     </nav>
+
+    <!-- Right Side (WhatsApp + Rendez-vous + Burger Button) -->
     <div class="flex items-center gap-3">
       <a href="https://wa.me/212650671855" target="_blank" rel="noopener" class="hidden sm:flex items-center gap-2 border border-forest-500 text-forest-700 px-4 py-2 rounded-full text-sm font-semibold hover:bg-forest-50 transition">
         <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
       </a>
       <a href="index.html#rdv" class="bg-forest-600 hover:bg-forest-700 text-white px-5 py-2 rounded-full text-sm font-semibold transition">Rendez-vous</a>
+
+      <!-- البوطون ديال 3 د الأسطر للتليفون -->
+      <button id="mobileMenuBtn" type="button" class="lg:hidden p-2 text-ink hover:text-brand transition-colors focus:outline-none cursor-pointer">
+        <i data-lucide="menu" id="menuIcon" class="w-7 h-7"></i>
+      </button>
     </div>
+  </div>
+
+  <!-- Mobile Dropdown Menu (فيه غير الروابط ديالك بالضبط) -->
+  <div id="mobileMenu" class="hidden lg:hidden bg-cream border-t border-forest-100 px-6 py-4 flex flex-col gap-3 text-base font-semibold text-ink shadow-lg">
+    <a href="index.html#a-propos" class="hover:text-brand transition-colors py-1">Accueil</a>
+    <a href="#a-propos" class="hover:text-brand transition-colors py-1">À Propos</a>
+    <a href="#specialites" class="hover:text-brand transition-colors py-1">Spécialités</a>
+    <a href="#certificates" class="hover:text-brand transition-colors py-1">Certificates</a>
+    <a href="#carte" class="hover:text-brand transition-colors py-1">Localisation</a>
+    <a href="indexCentre.html" class="hover:text-brand transition-colors py-1">Centre</a>
   </div>
 </header>
 <body class="bg-sand text-ink antialiased">
