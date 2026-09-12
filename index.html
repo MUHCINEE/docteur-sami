@@ -94,6 +94,51 @@
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="script.js" defer></script>
 <link rel="preload" as="image" href="hero-image.webp">
+<!-- Flatpickr CSS Base -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Custom Calendar Styling (#48D1CC Theme) -->
+<style>
+  .flatpickr-calendar {
+    border-radius: 16px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 8px !important;
+    background: #ffffff !important;
+    font-family: inherit !important;
+  }
+  .flatpickr-months {
+    background: transparent !important;
+  }
+  .flatpickr-current-month .flatpickr-monthDropdown-months,
+  .flatpickr-current-month input.cur-year {
+    font-weight: 700 !important;
+    color: #0f172a !important;
+  }
+  .flatpickr-day.selected, 
+  .flatpickr-day.startRange, 
+  .flatpickr-day.endRange, 
+  .flatpickr-day.selected:focus, 
+  .flatpickr-day.selected:hover {
+    background: #48D1CC !important;
+    border-color: #48D1CC !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    border-radius: 50% !important;
+  }
+  .flatpickr-day:hover {
+    background: #e6faf9 !important;
+    border-radius: 50% !important;
+  }
+  .flatpickr-day.today {
+    border-color: #48D1CC !important;
+    border-radius: 50% !important;
+  }
+  .flatpickr-day.today:hover {
+    background: #48D1CC !important;
+    color: white !important;
+  }
+</style>
 </head>
 <script>
   if ('serviceWorker' in navigator) {
@@ -140,15 +185,22 @@
   <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
     
     <!-- Logo & Title -->
-    <a href="#" class="flex items-center gap-3">
-      <div class="h-12 flex items-center justify-center">
-        <img src="logos/logo.PNG" alt="TabibeKoum Logo" width="102" height="48" decoding="async" class="h-full w-auto object-contain mix-blend-multiply">
-      </div>
-      <div>
-        <p class="font-serif text-lg leading-tight text-forest-900">Dr. Khettab Sami</p>
-        <p class="text-xs text-forest-600 tracking-wide">Cabinet Tabibe Koum · Tanger</p>
-      </div>
-    </a>
+<a href="#" class="flex items-center gap-2">
+  <div class="h-14 sm:h-12 flex items-center justify-center py-1">
+    <img 
+      src="logos/logo.PNG" 
+      alt="TabibeKoum Logo" 
+      width="140" 
+      height="160" 
+      decoding="async" 
+      class="h-full max-h-14 w-auto object-contain mix-blend-multiply scale-110 origin-left"
+    >
+  </div>
+
+  <div class="hidden sm:block">
+    <p class="font-serif text-lg leading-tight text-forest-900">Dr. Khettab Sami</p>
+  </div>
+</a>
 
     <!-- Desktop Navigation -->
     <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-ink">
@@ -447,35 +499,43 @@
     </div>
   </div>
 
-  <form id="rdv-form" class="bg-white rounded-2xl p-8 shadow-md border border-forest-100 space-y-4">
-    <h3 class="font-serif text-xl text-forest-900 mb-2">Formulaire de Confirmation</h3>
-    <div>
-      <label class="block text-sm font-medium text-ink/70 mb-1">Nom complet</label>
-      <input id="rdv-nom" type="text" required placeholder="Votre nom" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream">
+<form id="rdv-form" class="bg-white rounded-2xl p-8 shadow-md border border-forest-100 space-y-4">
+  <h3 class="font-serif text-xl text-forest-900 mb-2">Formulaire de Confirmation</h3>
+  <div>
+    <label class="block text-sm font-medium text-ink/70 mb-1">Nom complet</label>
+    <input id="rdv-nom" type="text" required placeholder="Votre nom" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream">
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-ink/70 mb-1">Téléphone</label>
+    <input id="rdv-tel" type="tel" required placeholder="06 XX XX XX XX" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream">
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-ink/70 mb-1">Motif de consultation</label>
+    <select id="rdv-motif" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream">
+      <option>Médecine générale</option>
+      <option>Urgence</option>
+      <option>Suivi diabète</option>
+      <option>Suivi obésité / insulinorésistance</option>
+      <option>ECG / Échographie</option>
+      <option>Consultation à domicile</option>
+    </select>
+  </div>
+  
+  <!-- Créneau souhaité avec Calendar Picker -->
+  <div>
+    <label class="block text-sm font-medium text-ink/70 mb-1">Créneau souhaité</label>
+    <div class="relative cursor-pointer">
+      <input id="rdv-date" type="text" placeholder="Sélectionnez la date" readonly class="w-full border border-forest-100 rounded-lg pl-4 pr-10 py-2.5 bg-cream cursor-pointer focus:outline-none">
+      <div id="calendar-trigger" class="absolute right-3 top-1/2 -translate-y-1/2 text-forest-600 hover:text-[#48D1CC] transition cursor-pointer">
+        <i data-lucide="calendar" class="w-5 h-5"></i>
+      </div>
     </div>
-    <div>
-      <label class="block text-sm font-medium text-ink/70 mb-1">Téléphone</label>
-      <input id="rdv-tel" type="tel" required placeholder="06 XX XX XX XX" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream">
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-ink/70 mb-1">Motif de consultation</label>
-      <select id="rdv-motif" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream">
-        <option>Médecine générale</option>
-        <option>Urgence</option>
-        <option>Suivi diabète</option>
-        <option>Suivi obésité / insulinorésistance</option>
-        <option>ECG / Échographie</option>
-        <option>Consultation à domicile</option>
-      </select>
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-ink/70 mb-1">Créneau souhaité</label>
-      <input id="rdv-date" type="text" placeholder="Ex : Mardi après-midi" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream">
-    </div>
-    <button type="submit" class="w-full bg-forest-600 hover:bg-forest-700 text-white rounded-full py-3 font-semibold flex items-center justify-center gap-2 transition">
-      <i data-lucide="send" class="w-4 h-4"></i> Envoyer via WhatsApp
-    </button>
-  </form>
+  </div>
+
+  <button type="submit" class="w-full bg-forest-600 hover:bg-forest-700 text-white rounded-full py-3 font-semibold flex items-center justify-center gap-2 transition">
+    <i data-lucide="send" class="w-4 h-4"></i> Envoyer via WhatsApp
+  </button>
+</form>
 </section>
 
 <!-- ============ MAP ============ -->
@@ -511,7 +571,6 @@
     
     <!-- COLONNE 1: LOGO & NOM -->
     <div>
-      <!-- اللوغو ديالك (بدل images/logo.png بمسار اللوغو الصحيح عندك) -->
       <img src="logos/logo.PNG" alt="Logo Dr. Khettab Sami" width="120" height="56" loading="lazy" decoding="async" class="h-14 w-auto mb-3 object-contain">
       <p class="font-serif text-xl mb-2">Dr. Khettab Sami</p>
       <p class="text-forest-100/70 text-sm">Médecin Généraliste, Urgentiste & Diabétologue à Tanger.</p>
@@ -581,6 +640,13 @@
     &copy; 2026 Dr. Khettab Sami — Tabibe Koum. Tous droits réservés.
   </div>
 </footer>
+
+
+
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
 
 </body>
 </html>
