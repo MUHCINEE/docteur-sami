@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
+  <link rel="preload" as="image" href="hero-image.webp">
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -520,7 +521,7 @@
 
   <!-- ================= CAROUSEL ROTATION JAVASCRIPT ================= -->
     
-<script>
+<script defer>
   document.addEventListener('DOMContentLoaded', () => {
     // Initialize Lucide Icons
     if (typeof lucide !== 'undefined') {
@@ -528,7 +529,7 @@
     }
 
     // ==========================================
-    // 1. Mobile Menu Logic (3 ديال الأسطر)
+    // 1. Mobile Menu Logic 
     // ==========================================
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
@@ -548,7 +549,6 @@
         setMenuOpen(!mobileMenu.classList.contains('open'));
       });
 
-      // إغلاق القائمة عند الضغط على أي رابط
       const mobileLinks = mobileMenu.querySelectorAll('a');
       mobileLinks.forEach((link) => {
         link.addEventListener('click', () => {
@@ -556,14 +556,12 @@
         });
       });
 
-      // إغلاق القائمة عند الضغط خارجها
       document.addEventListener('click', (e) => {
         if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
           setMenuOpen(false);
         }
       });
 
-      // إغلاق القائمة عند الرجوع لعرض ديسكتوب
       window.addEventListener('resize', () => {
         if (window.innerWidth >= 1024) {
           setMenuOpen(false);
@@ -572,7 +570,7 @@
     }
 
     // ==========================================
-    // 2. Carousel Logic (الكود ديالك كما هو)
+    // 2. Carousel Logic 
     // ==========================================
     const cards = Array.from(document.querySelectorAll('.carousel-card'));
     let currentIndex = 0;
