@@ -165,6 +165,20 @@
   </style>
 </head>
 
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then((registration) => {
+          console.log('Service Worker enregistré avec succès:', registration.scope);
+        })
+        .catch((error) => {
+          console.error('Échec de l\'enregistrement du Service Worker:', error);
+        });
+    });
+  }
+</script>
+
 <body class="bg-cream text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
 
   <!-- ================= HEADER ================= -->
