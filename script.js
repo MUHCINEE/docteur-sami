@@ -51,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
       setMenuOpen(!mobileMenu.classList.contains('open'));
     });
 
-    // سد الموني عند الضغط على أي رابط
     const mobileLinks = mobileMenu.querySelectorAll('a');
     mobileLinks.forEach(function (link) {
       link.addEventListener('click', function () {
@@ -59,14 +58,12 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
 
-    // سد الموني إلا كليكا المستخدم فشي بلاصة خاوية فـ الصفحة
     document.addEventListener('click', function (e) {
       if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
         setMenuOpen(false);
       }
     });
 
-    // سد الموني إلا رجع المستخدم لعرض ديسكتوب (تفادي بقاء القائمة مفتوحة)
     window.addEventListener('resize', function () {
       if (window.innerWidth >= 1024) {
         setMenuOpen(false);
@@ -74,13 +71,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // 3. Formulaire WhatsApp (إذا كان موجوداً في الصفحة)
   initRdvForm();
 });
 
 function initRdvForm() {
   const form = document.getElementById('rdv-form');
-  if (!form) return; // إلا مالقاش الفورم مايدير والو ومايعطيش Error
+  if (!form) return; 
 
   form.addEventListener('submit', function (event) {
     event.preventDefault();
