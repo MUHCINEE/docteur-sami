@@ -2,18 +2,6 @@
 /* ============================================================
    🌙 PALETTE DU MODE SOMBRE — LE SEUL ENDROIT À MODIFIER
    ------------------------------------------------------------
-   Chaque valeur est un triplet RGB "R G B" (sans virgules, sans
-   "rgb()") utilisé par Tailwind pour générer les classes
-   dark:bg-night-*, dark:text-night-*, dark:border-night-*, etc.
-   avec support de l'opacité (ex: dark:bg-night-800/60).
-
-   Changez juste les chiffres ci-dessous pour essayer d'autres
-   couleurs — TOUT le site en mode sombre se met à jour, sans
-   toucher au HTML. Redémarrez/rafraîchissez la page pour voir
-   le résultat.
-
-   Outil pratique pour convertir un HEX en "R G B" :
-   https://www.rapidtables.com/convert/color/hex-to-rgb.html
    ------------------------------------------------------------ */
 --night-100: 241 245 249; /* texte clair sur fond sombre */
 --night-300: 203 213 225; /* texte secondaire */
