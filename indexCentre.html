@@ -84,6 +84,17 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cabinet Médical - Galerie & Équipements</title>
+  <script>
+    // Applique le thème AVANT le premier rendu (évite le flash clair/sombre)
+    (function () {
+      try {
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = saved ? saved === 'dark' : prefersDark;
+        if (isDark) document.documentElement.classList.add('dark');
+      } catch (e) {}
+    })();
+  </script>
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://unpkg.com">
   
@@ -91,6 +102,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
@@ -126,6 +138,17 @@
   <style>
     /* scroll-behavior: smooth est déjà géré par la classe "scroll-smooth"
        sur <html> (voir plus haut) — pas besoin de la redéclarer ici. */
+
+    /* Transition ultra-fluide lors du basculement clair/sombre : activée brièvement
+       par le JS (classe .theme-transition) pour ne pas interférer avec les autres
+       transitions (menu mobile, carrousel...). */
+    html.theme-transition,
+    html.theme-transition *,
+    html.theme-transition *::before,
+    html.theme-transition *::after {
+      transition: background-color .35s ease, border-color .35s ease, color .35s ease,
+                  fill .35s ease, stroke .35s ease, box-shadow .35s ease !important;
+    }
     /* Header sticky : compositing sur son propre calque pour un scroll fluide */
     header {
       will-change: transform;
@@ -257,10 +280,10 @@
   }
 </script>
 
-<body class="bg-cream text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+<body class="bg-cream text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between dark:bg-slate-900 dark:text-slate-100">
 
   <!-- ================= HEADER ================= -->
-<header class="sticky top-0 z-40 bg-cream/90 backdrop-blur border-b border-forest-100 shadow-sm">
+<header class="sticky top-0 z-40 bg-cream/90 backdrop-blur border-b border-forest-100 shadow-sm dark:bg-slate-900/90 dark:border-slate-700/50">
   <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 <a href="#" class="flex items-center gap-2">
   <div class="h-14 sm:h-12 flex items-center justify-center py-1">
@@ -275,12 +298,12 @@
   </div>
 
   <div class="hidden sm:block">
-    <p class="font-serif text-lg leading-tight text-forest-900">Dr. Khettab Sami</p>
+    <p class="font-serif text-lg leading-tight text-forest-900 dark:text-white">Dr. Khettab Sami</p>
   </div>
 </a>
 
     <!-- Navigation Desktop -->
-    <nav class="hidden lg:flex items-center gap-10 text-base sm:text-lg font-semibold text-ink">
+    <nav class="hidden lg:flex items-center gap-10 text-base sm:text-lg font-semibold text-ink dark:text-slate-100">
       <a href="index.html" class="nav-link">Accueil</a>
       <a href="#contact" class="nav-link">Contact</a>
       <a href="#images" class="nav-link">Galerie</a>
@@ -288,50 +311,67 @@
 
     <!-- Right Side -->
     <div class="flex items-center gap-3">
+      <!-- Interrupteur Clair / Sombre -->
+      <button
+        type="button"
+        data-theme-toggle
+        role="switch"
+        aria-checked="false"
+        aria-label="Basculer entre le mode clair et le mode sombre"
+        class="relative inline-flex items-center w-14 h-7 shrink-0 rounded-full border border-forest-200 dark:border-slate-600 bg-sand dark:bg-slate-700 transition-colors duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-forest-500/50"
+      >
+        <span class="absolute left-1.5 flex items-center justify-center text-amber-500 opacity-100 dark:opacity-30 transition-opacity duration-300">
+          <i data-lucide="sun" class="w-3.5 h-3.5"></i>
+        </span>
+        <span class="absolute right-1.5 flex items-center justify-center text-slate-400 dark:text-forest-300 opacity-30 dark:opacity-100 transition-opacity duration-300">
+          <i data-lucide="moon" class="w-3.5 h-3.5"></i>
+        </span>
+        <span class="absolute left-0.5 top-0.5 w-6 h-6 rounded-full bg-white dark:bg-slate-900 shadow-md transform transition-transform duration-300 ease-in-out translate-x-0 dark:translate-x-7"></span>
+      </button>
+
       <a href="https://wa.me/212650671855" target="_blank" rel="noopener" class="hidden sm:flex items-center gap-2 border border-brand text-slate-900 px-4 py-2 rounded-full text-sm font-semibold hover:bg-brand hover:text-white transition-all duration-200">
         <i data-lucide="message-circle" class="w-4 h-4 text-brand-dark group-hover:text-white"></i> WhatsApp
       </a>
       <a href="index.html#rdv" class="bg-brand hover:bg-brand-dark text-slate-900 hover:text-white px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 shadow-sm">Rendez-vous</a>
 
-      <button id="mobileMenuBtn" type="button" aria-label="Toggle Menu" class="lg:hidden p-2 text-ink hover:text-brand transition-colors focus:outline-none cursor-pointer z-50">
+      <button id="mobileMenuBtn" type="button" aria-label="Toggle Menu" class="lg:hidden p-2 text-ink hover:text-brand transition-colors focus:outline-none cursor-pointer z-50 dark:text-slate-100">
         <i data-lucide="menu" class="w-7 h-7 pointer-events-none"></i>
       </button>
     </div>
   </div>
 
   <!-- Mobile Dropdown Menu -->
-  <div id="mobileMenu" class="lg:hidden bg-cream border-t border-forest-100 px-6 py-4 flex flex-col gap-3 text-base font-semibold text-ink shadow-lg w-full left-0 top-full">
+  <div id="mobileMenu" class="lg:hidden bg-cream border-t border-forest-100 px-6 py-4 flex flex-col gap-3 text-base font-semibold text-ink shadow-lg w-full left-0 top-full dark:bg-slate-900 dark:border-slate-700/50 dark:text-slate-100">
     <a href="index.html" class="hover:text-brand transition-colors py-2 block">Accueil</a>
     <a href="#contact" class="hover:text-brand transition-colors py-2 block">Contact</a>
-    <a href="#images" class="mobile-link text-lg font-semibold text-ink">Galerie</a>
+    <a href="#images" class="mobile-link text-lg font-semibold text-ink dark:text-slate-100">Galerie</a>
   </div>
 </header>
 
   <!-- ================= SECTION 1: PRESENTATION (WITH ANIMATED CARD) ================= -->
-  <section class="py-12 md:py-16 px-6 max-w-5xl mx-auto">
- 
-    <div class="animated-presentation-card border-2 border-brand rounded-[2.5rem] p-8 sm:p-12 md:p-14 text-center shadow-lg relative overflow-hidden">
-      
-      <span class="inline-block bg-brand/20 text-forest-900 font-bold text-xs sm:text-sm px-5 py-2 rounded-full mb-6 border border-brand/40 shadow-sm">
-        Un espace moderne & hygiénique
-      </span>
-      
-      <!-- Title -->
-      <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
-        Un cabinet équipé pour votre confort et votre sécurité
-      </h1>
-      
-      <!-- Description -->
-      <p class="text-slate-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto font-medium">
-        Notre cabinet est entièrement aménagé avec du matériel médical de dernière génération. Nous veillons au respect strict des normes d'hygiène et de propreté pour vous accueillir dans un cadre propre, organisé et rassurant. Tous les équipements nécessaires sont à votre disposition, et nous renouvelons continuellement nos technologies pour vous garantir une prise en charge optimale.
-      </p>
-    </div>
-  </section>
+<section class="py-12 md:py-16 px-6 max-w-5xl mx-auto">
+  <div class="animated-presentation-card border-2 border-brand rounded-[2.5rem] p-8 sm:p-12 md:p-14 text-center shadow-lg relative overflow-hidden !bg-white dark:!bg-slate-900 transition-colors duration-300">
+    
+    <span class="inline-block bg-brand/20 text-forest-900 font-bold text-xs sm:text-sm px-5 py-2 rounded-full mb-6 border border-brand/40 shadow-sm dark:text-white">
+      Un espace moderne & hygiénique
+    </span>
+    
+    <!-- Title -->
+    <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight">
+      Un cabinet équipé pour votre confort et votre sécurité
+    </h1>
+    
+    <!-- Description -->
+    <p class="text-slate-700 dark:text-slate-300 text-base md:text-lg leading-relaxed max-w-3xl mx-auto font-medium">
+      Notre cabinet est entièrement aménagé avec du matériel médical de dernière génération. Nous veillons au respect strict des normes d'hygiène et de propreté pour vous accueillir dans un cadre propre, organisé et rassurant. Tous les équipements nécessaires sont à votre disposition, et nous renouvelons continuellement nos technologies pour vous garantir une prise en charge optimale.
+    </p>
+  </div>
+</section>
 
   <!-- ================= SECTION 2: CAROUSEL GALLERY (12 IMAGES) ================= -->
   <section class="py-10 px-6 max-w-5xl mx-auto w-full overflow-hidden mb-16" id="images">
     <div class="text-center mb-8">
-      <h2 class="text-2xl md:text-3xl font-bold text-slate-900">
+      <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
         Galerie du Cabinet & Clinique <strong class="text-[#48D1CC]">ibn Sina</strong>
       </h2>
     </div>
@@ -340,82 +380,82 @@
     <div id="carouselWrapper" class="relative h-[360px] sm:h-[420px] flex items-center justify-center cursor-pointer">
       
       <!-- CARD 1 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="images/img1.webp" alt="Équipement 1" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 2 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="images/img2.webp" alt="Équipement 2" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 3 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="images/img3.webp" alt="Équipement 3" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 4 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="images/img4.webp" alt="Équipement 4" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 5 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="images/img5.webp" alt="Équipement 5" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 6 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="images/img6.webp" alt="Équipement 6" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 8 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="images/img8.webp" alt="Équipement 8" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 9 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="images/img9.webp" alt="Équipement 9" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 10 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="images/img10.webp" alt="Équipement 10" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 11 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="images/img11.webp" alt="Équipement 11" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 12 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="images/img12.webp" alt="Équipement 12" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 13 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="imagesSina/imgs1.jpeg" alt="Équipement 13" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 14 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="imagesSina/imgs2.jpeg" alt="Équipement 14" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 15 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="imagesSina/imgs3.jpeg" alt="Équipement 15" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
       <!-- CARD 16 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="imagesSina/imgs4.jpeg" alt="Équipement 16" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
         <!-- CARD 17 -->
-      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20">
+      <div class="carousel-card absolute w-[260px] sm:w-[340px] h-[320px] sm:h-[380px] rounded-2xl bg-cream shadow-xl overflow-hidden border border-brand/20 dark:bg-slate-900">
         <img src="imagesSina/imgs5.jpeg" alt="Équipement 17" width="260" height="320" loading="lazy" decoding="async" class="w-full h-full object-cover">
       </div>
 
@@ -436,7 +476,7 @@
       <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center">
         
         <!-- Badge Availability -->
-        <div class="inline-flex items-center gap-2 bg-white/95 backdrop-blur-md px-4 py-1.5 rounded-full text-forest-900 text-xs sm:text-sm font-semibold shadow-sm mb-6 border border-white/50">
+        <div class="inline-flex items-center gap-2 bg-white/95 backdrop-blur-md px-4 py-1.5 rounded-full text-forest-900 text-xs sm:text-sm font-semibold shadow-sm mb-6 border border-white/50 dark:bg-slate-800/95 dark:text-white">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
           <span>Disponible : Lun – Sam · 9h00 – 19h00</span>
         </div>
@@ -453,7 +493,7 @@
         <div class="flex flex-wrap justify-center items-center gap-4 w-full">
           
           <!-- Appeler (Téléphone) -->
-          <a href="tel:0650671855" class="flex-1 sm:flex-initial min-w-[150px] inline-flex items-center justify-center gap-3 bg-white hover:bg-brand text-slate-900 hover:text-white font-semibold px-6 py-3.5 rounded-full transition-all duration-300 shadow-md group border border-slate-200">
+          <a href="tel:0650671855" class="flex-1 sm:flex-initial min-w-[150px] inline-flex items-center justify-center gap-3 bg-white hover:bg-brand text-slate-900 hover:text-white font-semibold px-6 py-3.5 rounded-full transition-all duration-300 shadow-md group border border-slate-200 dark:bg-slate-800">
             <div class="w-8 h-8 rounded-full bg-forest-900 group-hover:bg-white text-white group-hover:text-forest-900 flex items-center justify-center transition-colors">
               <i data-lucide="phone" class="w-4 h-4"></i>
             </div>
@@ -461,7 +501,7 @@
           </a>
 
           <!-- WhatsApp -->
-          <a href="https://wa.me/212650671855" target="_blank" rel="noopener" class="flex-1 sm:flex-initial min-w-[150px] inline-flex items-center justify-center gap-3 bg-white hover:bg-emerald-500 text-slate-900 hover:text-white font-semibold px-6 py-3.5 rounded-full transition-all duration-300 shadow-md group border border-slate-200">
+          <a href="https://wa.me/212650671855" target="_blank" rel="noopener" class="flex-1 sm:flex-initial min-w-[150px] inline-flex items-center justify-center gap-3 bg-white hover:bg-emerald-500 text-slate-900 hover:text-white font-semibold px-6 py-3.5 rounded-full transition-all duration-300 shadow-md group border border-slate-200 dark:bg-slate-800">
             <div class="w-8 h-8 rounded-full bg-forest-900 group-hover:bg-white text-white group-hover:text-emerald-600 flex items-center justify-center transition-colors">
               <i data-lucide="message-circle" class="w-4 h-4"></i>
             </div>
@@ -469,7 +509,7 @@
           </a>
 
           <!-- Localisation -->
-          <a href="https://maps.app.goo.gl/fn7MqcrKXWJLydew6" target="_blank" rel="noopener" class="flex-1 sm:flex-initial min-w-[150px] inline-flex items-center justify-center gap-3 bg-white hover:bg-forest-800 text-slate-900 hover:text-white font-semibold px-6 py-3.5 rounded-full transition-all duration-300 shadow-md group border border-slate-200">
+          <a href="https://maps.app.goo.gl/fn7MqcrKXWJLydew6" target="_blank" rel="noopener" class="flex-1 sm:flex-initial min-w-[150px] inline-flex items-center justify-center gap-3 bg-white hover:bg-forest-800 text-slate-900 hover:text-white font-semibold px-6 py-3.5 rounded-full transition-all duration-300 shadow-md group border border-slate-200 dark:bg-slate-800">
             <div class="w-8 h-8 rounded-full bg-forest-900 group-hover:bg-white text-white group-hover:text-forest-800 flex items-center justify-center transition-colors">
               <i data-lucide="map-pin" class="w-4 h-4"></i>
             </div>
@@ -508,35 +548,35 @@
         <p class="font-semibold mb-3 text-brand">Réseaux Sociaux</p>
         <div class="flex gap-3">
           <!-- YouTube -->
-          <a href="https://youtube.com/@drsamikhettab?si=0jKLOaReuKKaPsd5" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand hover:text-slate-900 transition-colors" title="YouTube">
+          <a href="https://youtube.com/@drsamikhettab?si=0jKLOaReuKKaPsd5" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand hover:text-slate-900 transition-colors dark:bg-slate-800/10" title="YouTube">
             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
               <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
             </svg>
           </a>
 
           <!-- Facebook -->
-          <a href="https://www.facebook.com/share/1CYm7PZu9N/" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand hover:text-slate-900 transition-colors" title="Facebook">
+          <a href="https://www.facebook.com/share/1CYm7PZu9N/" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand hover:text-slate-900 transition-colors dark:bg-slate-800/10" title="Facebook">
             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
             </svg>
           </a>
 
           <!-- Instagram 1 (TabibeKoum) -->
-          <a href="https://www.instagram.com/tabibekoum?stkn=MTZrYmhpbjBrcmYxdg==" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand hover:text-slate-900 transition-colors" title="Instagram TabibeKoum">
+          <a href="https://www.instagram.com/tabibekoum?stkn=MTZrYmhpbjBrcmYxdg==" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand hover:text-slate-900 transition-colors dark:bg-slate-800/10" title="Instagram TabibeKoum">
             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
               <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
             </svg>
           </a>
 
           <!-- Instagram 2 (Cabinet Dr Khettab Sami) -->
-          <a href="https://www.instagram.com/cabinet.dr.khettab.sami?stkn=MXA2MW5waHl4dzVvaA==" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand hover:text-slate-900 transition-colors" title="Instagram Cabinet">
+          <a href="https://www.instagram.com/cabinet.dr.khettab.sami?stkn=MXA2MW5waHl4dzVvaA==" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand hover:text-slate-900 transition-colors dark:bg-slate-800/10" title="Instagram Cabinet">
             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
               <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
             </svg>
           </a>
 
           <!-- TikTok -->
-          <a href="https://www.tiktok.com/@drsamikhettab?_r=1&_t=ZS-99d1Uz6munK" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand hover:text-slate-900 transition-colors" title="TikTok">
+          <a href="https://www.tiktok.com/@drsamikhettab?_r=1&_t=ZS-99d1Uz6munK" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand hover:text-slate-900 transition-colors dark:bg-slate-800/10" title="TikTok">
             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
               <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.18-1.18 2.08a3.98 3.98 0 003.98 3.98c2.21 0 4-1.79 4-4V.02h-2.53z"/>
             </svg>
@@ -566,6 +606,43 @@
     if (typeof lucide !== 'undefined') {
       lucide.createIcons();
     }
+
+    // ==========================================
+    // 0. Interrupteur Clair / Sombre
+    // ==========================================
+    (function initThemeToggle() {
+      const root = document.documentElement;
+      const toggles = document.querySelectorAll('[data-theme-toggle]');
+      if (!toggles.length) return;
+
+      let transitionTimer = null;
+      function applyTheme(theme, persist) {
+        root.classList.add('theme-transition');
+        root.classList.toggle('dark', theme === 'dark');
+        toggles.forEach((btn) => btn.setAttribute('aria-checked', String(theme === 'dark')));
+        if (persist) {
+          try { localStorage.setItem('theme', theme); } catch (e) {}
+        }
+        clearTimeout(transitionTimer);
+        transitionTimer = setTimeout(() => root.classList.remove('theme-transition'), 400);
+      }
+
+      toggles.forEach((btn) => {
+        btn.setAttribute('aria-checked', String(root.classList.contains('dark')));
+        btn.addEventListener('click', () => {
+          const isDark = root.classList.contains('dark');
+          applyTheme(isDark ? 'light' : 'dark', true);
+        });
+      });
+
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          let saved = null;
+          try { saved = localStorage.getItem('theme'); } catch (err) {}
+          if (!saved) applyTheme(e.matches ? 'dark' : 'light', false);
+        });
+      }
+    })();
 
     // ==========================================
     // 1. Mobile Menu Logic 

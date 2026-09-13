@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
 <head>
+<script>
+  // Applique le thème AVANT le premier rendu (évite le flash clair/sombre)
+  (function () {
+    try {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = saved ? saved === 'dark' : prefersDark;
+      if (isDark) document.documentElement.classList.add('dark');
+    } catch (e) {}
+  })();
+</script>
 <meta charset="UTF-8">
 <script type="application/ld+json">
 {
@@ -138,6 +149,34 @@
     background: #48D1CC !important;
     color: white !important;
   }
+
+  /* --- Mode sombre pour le calendrier Flatpickr --- */
+  html.dark .flatpickr-calendar {
+    background: #1e293b !important; /* slate-800 */
+    border-color: #334155 !important; /* slate-700 */
+    box-shadow: 0 10px 25px -5px rgb(0 0 0 / .5), 0 8px 10px -6px rgb(0 0 0 / .4) !important;
+  }
+  html.dark .flatpickr-current-month .flatpickr-monthDropdown-months,
+  html.dark .flatpickr-current-month input.cur-year,
+  html.dark .flatpickr-weekday {
+    color: #e2e8f0 !important;
+  }
+  html.dark .flatpickr-day {
+    color: #e2e8f0 !important;
+  }
+  html.dark .flatpickr-day.flatpickr-disabled,
+  html.dark .flatpickr-day.prevMonthDay,
+  html.dark .flatpickr-day.nextMonthDay {
+    color: #475569 !important;
+  }
+  html.dark .flatpickr-day:hover {
+    background: #334155 !important;
+  }
+  html.dark .flatpickr-months .flatpickr-prev-month,
+  html.dark .flatpickr-months .flatpickr-next-month {
+    fill: #e2e8f0 !important;
+    color: #e2e8f0 !important;
+  }
 </style>
 </head>
 <script>
@@ -181,7 +220,7 @@
 </div>
 
 <!-- ============ HEADER / NAV ============ -->
-<header class="sticky top-0 z-40 bg-cream/90 backdrop-blur border-b border-forest-100 shadow-sm">
+<header class="sticky top-0 z-40 bg-cream/90 backdrop-blur border-b border-forest-100 shadow-sm dark:bg-slate-900/90 dark:border-slate-700/50">
   <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
     
     <!-- Logo & Title -->
@@ -198,12 +237,12 @@
   </div>
 
   <div class="hidden sm:block">
-    <p class="font-serif text-lg leading-tight text-forest-900">Dr. Khettab Sami</p>
+    <p class="font-serif text-lg leading-tight text-forest-900 dark:text-white">Dr. Khettab Sami</p>
   </div>
 </a>
 
     <!-- Desktop Navigation -->
-    <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-ink">
+    <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-ink dark:text-slate-100">
       <a href="#apropos" class="nav-link">À Propos</a>
       <a href="indexDrSami.html" class="nav-link">Dr sami</a>
       <a href="indexCentre.html" class="nav-link">Centre</a>
@@ -214,16 +253,34 @@
     </nav>
 
     <div class="flex items-center gap-3">
+      <!-- Interrupteur Clair / Sombre -->
+      <button
+        type="button"
+        data-theme-toggle
+        role="switch"
+        aria-checked="false"
+        aria-label="Basculer entre le mode clair et le mode sombre"
+        class="relative inline-flex items-center w-14 h-7 shrink-0 rounded-full border border-forest-200 dark:border-slate-600 bg-sand dark:bg-slate-700 transition-colors duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-forest-500/50"
+      >
+        <span class="absolute left-1.5 flex items-center justify-center text-amber-500 opacity-100 dark:opacity-30 transition-opacity duration-300">
+          <i data-lucide="sun" class="w-3.5 h-3.5"></i>
+        </span>
+        <span class="absolute right-1.5 flex items-center justify-center text-slate-400 dark:text-forest-300 opacity-30 dark:opacity-100 transition-opacity duration-300">
+          <i data-lucide="moon" class="w-3.5 h-3.5"></i>
+        </span>
+        <span class="absolute left-0.5 top-0.5 w-6 h-6 rounded-full bg-white dark:bg-slate-900 shadow-md transform transition-transform duration-300 ease-in-out translate-x-0 dark:translate-x-7"></span>
+      </button>
+
       <a href="#rdv" class="bg-forest-600 hover:bg-forest-700 text-white px-5 py-2 rounded-full text-sm font-semibold transition">Rendez-vous</a>
       
-      <button id="mobileMenuBtn" type="button" aria-label="Ouvrir le menu" class="lg:hidden p-2 text-ink hover:text-brand transition-colors focus:outline-none cursor-pointer">
+      <button id="mobileMenuBtn" type="button" aria-label="Ouvrir le menu" class="lg:hidden p-2 text-ink hover:text-brand transition-colors focus:outline-none cursor-pointer dark:text-slate-100">
         <i data-lucide="menu" id="menuIcon" class="w-7 h-7"></i>
       </button>
     </div>
   </div>
 
   <!-- Mobile Dropdown Menu -->
-  <div id="mobileMenu" class="lg:hidden bg-cream border-t border-forest-100 px-6 py-4 flex flex-col gap-3 text-base font-semibold text-ink shadow-lg">
+  <div id="mobileMenu" class="lg:hidden bg-cream border-t border-forest-100 px-6 py-4 flex flex-col gap-3 text-base font-semibold text-ink shadow-lg dark:bg-slate-900 dark:border-slate-700/50 dark:text-slate-100">
     <a href="#apropos" class="hover:text-brand transition-colors py-1">À Propos</a>
     <a href="indexDrSami.html" class="hover:text-brand transition-colors py-1">Dr sami</a>
     <a href="indexCentre.html" class="hover:text-brand transition-colors py-1">Centre</a>
@@ -237,28 +294,28 @@
 <main>
 <!-- ============ HERO ============ -->
 <section class="relative overflow-hidden">
-  <div class="absolute inset-0 bg-gradient-to-br from-forest-50 via-cream to-sand"></div>
+  <div class="absolute inset-0 bg-gradient-to-br from-forest-50 via-cream to-sand dark:from-slate-900 dark:via-slate-950 dark:to-slate-900"></div>
   <div class="max-w-7xl mx-auto px-6 py-16 md:py-24 relative grid md:grid-cols-2 gap-12 items-center">
     <div class="fade-hero">
-      <h1 class="font-serif text-4xl md:text-5xl leading-[1.1] text-forest-900">
+      <h1 class="font-serif text-4xl md:text-5xl leading-[1.1] text-forest-900 dark:text-white">
         Un médecin attentive,<br> au cœur de Tanger.
       </h1>
-      <p class="mt-5 text-lg text-ink/80 max-w-md">
+      <p class="mt-5 text-lg text-ink/80 max-w-md dark:text-slate-300">
         Dr Khettab Sami vous accompagne en médecine générale, urgences et diabétologie —
         avec un suivi personnalisé de l'obésité et de l'insulinorésistance.
       </p>
 
       <div class="mt-6 flex flex-wrap gap-3">
-        <span class="badge-line bg-white border border-forest-100 rounded-full px-4 py-1.5 text-sm text-forest-700 shadow-sm">100% centré patient</span>
-        <span class="badge-line bg-white border border-forest-100 rounded-full px-4 py-1.5 text-sm text-forest-700 shadow-sm">Urgences 24/7</span>
-        <span class="badge-line bg-white border border-forest-100 rounded-full px-4 py-1.5 text-sm text-forest-700 shadow-sm">Consultation à domicile</span>
+        <span class="badge-line bg-white border border-forest-100 rounded-full px-4 py-1.5 text-sm text-forest-700 shadow-sm dark:bg-slate-800 dark:border-slate-700/50 dark:text-forest-300">100% centré patient</span>
+        <span class="badge-line bg-white border border-forest-100 rounded-full px-4 py-1.5 text-sm text-forest-700 shadow-sm dark:bg-slate-800 dark:border-slate-700/50 dark:text-forest-300">Urgences 24/7</span>
+        <span class="badge-line bg-white border border-forest-100 rounded-full px-4 py-1.5 text-sm text-forest-700 shadow-sm dark:bg-slate-800 dark:border-slate-700/50 dark:text-forest-300">Consultation à domicile</span>
       </div>
 
       <div class="mt-8 flex flex-wrap gap-4">
         <a href="tel:+212650671855" class="inline-flex items-center gap-2 bg-forest-600 hover:bg-forest-700 text-white px-6 py-3 rounded-full font-semibold transition">
           <i data-lucide="phone-call" class="w-5 h-5"></i> Appeler maintenant
         </a>
-        <a href="#rdv" class="inline-flex items-center gap-2 border-2 border-forest-600 text-forest-700 hover:bg-forest-50 px-6 py-3 rounded-full font-semibold transition">
+        <a href="#rdv" class="inline-flex items-center gap-2 border-2 border-forest-600 text-forest-700 hover:bg-forest-50 px-6 py-3 rounded-full font-semibold transition dark:text-forest-300 dark:hover:bg-slate-700/40">
           <i data-lucide="calendar-check" class="w-5 h-5"></i> Réserver un RDV
         </a>
       </div>
@@ -268,11 +325,11 @@
       <div class="rounded-2xl overflow-hidden shadow-xl border-8 border-white">
         <img src="images/img2.webp" alt="Cabinet du Dr Khettab Sami — Tabibe Koum, Tanger" width="640" height="420" decoding="async" fetchpriority="high" class="w-full h-[420px] object-cover">
       </div>
-      <div class="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-4 flex items-center gap-3 border border-forest-100">
-        <div class="w-11 h-11 rounded-full bg-forest-100 flex items-center justify-center"><i data-lucide="heart-pulse" class="w-5 h-5 text-forest-600"></i></div>
+      <div class="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-4 flex items-center gap-3 border border-forest-100 dark:bg-slate-800 dark:border-slate-700/50">
+        <div class="w-11 h-11 rounded-full bg-forest-100 flex items-center justify-center dark:bg-slate-700/40"><i data-lucide="heart-pulse" class="w-5 h-5 text-forest-600 dark:text-forest-300"></i></div>
         <div>
-          <p class="font-semibold text-sm text-forest-900">Suivi Diabète & ECG</p>
-          <p class="text-xs text-ink/60">Équipement moderne sur place</p>
+          <p class="font-semibold text-sm text-forest-900 dark:text-white">Suivi Diabète & ECG</p>
+          <p class="text-xs text-ink/60 dark:text-slate-400">Équipement moderne sur place</p>
         </div>
       </div>
     </div>
@@ -309,14 +366,14 @@
   </div>
   <div>
     <div class="divider-leaf mb-4"></div>
-    <h2 class="font-serif text-3xl md:text-4xl text-forest-900 mb-2">À Propos du Dr. Khettab Sami</h2>
-    <p class="text-ink/80 leading-relaxed mb-4">
+    <h2 class="font-serif text-3xl md:text-4xl text-forest-900 mb-2 dark:text-white">À Propos du Dr. Khettab Sami</h2>
+    <p class="text-ink/80 leading-relaxed mb-4 dark:text-slate-300">
       Médecin généraliste et urgentiste, le Dr Khettab Sami exerce à Tanger avec une attention particulière
-      portée à la médecine métabolique. Son cabinet, <span class="font-semibold text-forest-700">Tabibe Koum</span>,
+      portée à la médecine métabolique. Son cabinet, <span class="font-semibold text-forest-700 dark:text-forest-300">Tabibe Koum</span>,
       accompagne les patients dans la durée : suivi du diabète, gestion de l'insulinorésistance et de l'obésité,
       consultations d'urgence et visites à domicile.
     </p>
-    <p class="text-ink/80 leading-relaxed mb-6">
+    <p class="text-ink/80 leading-relaxed mb-6 dark:text-slate-300">
       Formé en continu — bilan cardiaque, échographie, petite chirurgie au cabinet — il privilégie une médecine
       de proximité, humaine et rigoureuse, adaptée à chaque patient.
     </p>
@@ -331,78 +388,78 @@
 </section>
 
 <!-- ============ SERVICES ============ -->
-<section id="services" class="bg-sand py-20">
+<section id="services" class="bg-sand py-20 dark:bg-slate-950">
   <div class="max-w-7xl mx-auto px-6">
     <div class="text-center max-w-2xl mx-auto mb-14">
       <div class="divider-leaf mx-auto mb-4"></div>
-      <h2 class="font-serif text-3xl md:text-4xl text-forest-900">Spécialités & Services</h2>
-      <p class="text-ink/70 mt-4">Une prise en charge complète, du diagnostic au suivi au long cours.</p>
+      <h2 class="font-serif text-3xl md:text-4xl text-forest-900 dark:text-white">Spécialités & Services</h2>
+      <p class="text-ink/70 mt-4 dark:text-slate-400">Une prise en charge complète, du diagnostic au suivi au long cours.</p>
     </div>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="service-card bg-white rounded-xl p-7 shadow-sm border border-forest-100">
-        <div class="w-12 h-12 rounded-lg bg-forest-100 flex items-center justify-center mb-4"><i data-lucide="stethoscope" class="w-6 h-6 text-forest-600"></i></div>
-        <h3 class="font-serif text-xl text-forest-900 mb-1">Médecine Générale & Urgences</h3>
+      <div class="service-card bg-white rounded-xl p-7 shadow-sm border border-forest-100 dark:bg-slate-800 dark:border-slate-700/50">
+        <div class="w-12 h-12 rounded-lg bg-forest-100 flex items-center justify-center mb-4 dark:bg-slate-700/40"><i data-lucide="stethoscope" class="w-6 h-6 text-forest-600 dark:text-forest-300"></i></div>
+        <h3 class="font-serif text-xl text-forest-900 mb-1 dark:text-white">Médecine Générale & Urgences</h3>
         <p class="ar text-forest-500 text-sm mb-3">طبيب عام ومستعجلات</p>
-        <p class="text-ink/70 text-sm">Consultations générales, prise en charge des urgences et suivi médical global.</p>
+        <p class="text-ink/70 text-sm dark:text-slate-400">Consultations générales, prise en charge des urgences et suivi médical global.</p>
       </div>
 
-      <div class="service-card bg-white rounded-xl p-7 shadow-sm border border-forest-100">
-        <div class="w-12 h-12 rounded-lg bg-forest-100 flex items-center justify-center mb-4"><i data-lucide="droplet" class="w-6 h-6 text-forest-600"></i></div>
-        <h3 class="font-serif text-xl text-forest-900 mb-1">Diabétologie & Suivi du Diabète</h3>
+      <div class="service-card bg-white rounded-xl p-7 shadow-sm border border-forest-100 dark:bg-slate-800 dark:border-slate-700/50">
+        <div class="w-12 h-12 rounded-lg bg-forest-100 flex items-center justify-center mb-4 dark:bg-slate-700/40"><i data-lucide="droplet" class="w-6 h-6 text-forest-600 dark:text-forest-300"></i></div>
+        <h3 class="font-serif text-xl text-forest-900 mb-1 dark:text-white">Diabétologie & Suivi du Diabète</h3>
         <p class="ar text-forest-500 text-sm mb-3">طبيب السكري</p>
-        <p class="text-ink/70 text-sm">Diagnostic, équilibre glycémique et accompagnement personnalisé du diabète.</p>
+        <p class="text-ink/70 text-sm dark:text-slate-400">Diagnostic, équilibre glycémique et accompagnement personnalisé du diabète.</p>
       </div>
 
-      <div class="service-card bg-white rounded-xl p-7 shadow-sm border border-forest-100">
-        <div class="w-12 h-12 rounded-lg bg-forest-100 flex items-center justify-center mb-4"><i data-lucide="scale" class="w-6 h-6 text-forest-600"></i></div>
-        <h3 class="font-serif text-xl text-forest-900 mb-1">Suivi d'Obésité & Insulinorésistance</h3>
+      <div class="service-card bg-white rounded-xl p-7 shadow-sm border border-forest-100 dark:bg-slate-800 dark:border-slate-700/50">
+        <div class="w-12 h-12 rounded-lg bg-forest-100 flex items-center justify-center mb-4 dark:bg-slate-700/40"><i data-lucide="scale" class="w-6 h-6 text-forest-600 dark:text-forest-300"></i></div>
+        <h3 class="font-serif text-xl text-forest-900 mb-1 dark:text-white">Suivi d'Obésité & Insulinorésistance</h3>
         <p class="ar text-forest-500 text-sm mb-3">تتبع السمنة ومقاومة الأنسولين</p>
-        <p class="text-ink/70 text-sm">Programme de suivi nutritionnel et métabolique, adapté à vos objectifs.</p>
+        <p class="text-ink/70 text-sm dark:text-slate-400">Programme de suivi nutritionnel et métabolique, adapté à vos objectifs.</p>
       </div>
 
-      <div class="service-card bg-white rounded-xl p-7 shadow-sm border border-forest-100">
-        <div class="w-12 h-12 rounded-lg bg-forest-100 flex items-center justify-center mb-4"><i data-lucide="home" class="w-6 h-6 text-forest-600"></i></div>
-        <h3 class="font-serif text-xl text-forest-900 mb-1">Consultations à Domicile</h3>
+      <div class="service-card bg-white rounded-xl p-7 shadow-sm border border-forest-100 dark:bg-slate-800 dark:border-slate-700/50">
+        <div class="w-12 h-12 rounded-lg bg-forest-100 flex items-center justify-center mb-4 dark:bg-slate-700/40"><i data-lucide="home" class="w-6 h-6 text-forest-600 dark:text-forest-300"></i></div>
+        <h3 class="font-serif text-xl text-forest-900 mb-1 dark:text-white">Consultations à Domicile</h3>
         <p class="ar text-forest-500 text-sm mb-3">استشارات منزلية</p>
-        <p class="text-ink/70 text-sm">Le médecin se déplace chez vous pour les consultations qui le nécessitent.</p>
+        <p class="text-ink/70 text-sm dark:text-slate-400">Le médecin se déplace chez vous pour les consultations qui le nécessitent.</p>
       </div>
 
-      <div class="service-card bg-white rounded-xl p-7 shadow-sm border border-forest-100">
-        <div class="w-12 h-12 rounded-lg bg-forest-100 flex items-center justify-center mb-4"><i data-lucide="heart-pulse" class="w-6 h-6 text-forest-600"></i></div>
-        <h3 class="font-serif text-xl text-forest-900 mb-1">Bilan Cardiaque & Imagerie</h3>
+      <div class="service-card bg-white rounded-xl p-7 shadow-sm border border-forest-100 dark:bg-slate-800 dark:border-slate-700/50">
+        <div class="w-12 h-12 rounded-lg bg-forest-100 flex items-center justify-center mb-4 dark:bg-slate-700/40"><i data-lucide="heart-pulse" class="w-6 h-6 text-forest-600 dark:text-forest-300"></i></div>
+        <h3 class="font-serif text-xl text-forest-900 mb-1 dark:text-white">Bilan Cardiaque & Imagerie</h3>
         <p class="ar text-forest-500 text-sm mb-3">تخطيط القلب والألتراساوند</p>
-        <p class="text-ink/70 text-sm">ECG et échographie réalisés directement au cabinet.</p>
+        <p class="text-ink/70 text-sm dark:text-slate-400">ECG et échographie réalisés directement au cabinet.</p>
       </div>
 
       <div class="service-card bg-forest-600 text-white rounded-xl p-7 shadow-sm flex flex-col justify-between">
         <div>
-          <div class="w-12 h-12 rounded-lg bg-white/15 flex items-center justify-center mb-4"><i data-lucide="phone-call" class="w-6 h-6 text-white"></i></div>
+          <div class="w-12 h-12 rounded-lg bg-white/15 flex items-center justify-center mb-4 dark:bg-slate-800/15"><i data-lucide="phone-call" class="w-6 h-6 text-white"></i></div>
           <h3 class="font-serif text-xl mb-1">Une question ?</h3>
           <p class="text-forest-50/90 text-sm">Contactez directement le cabinet par téléphone ou WhatsApp.</p>
         </div>
-        <a href="tel:+212650671855" class="mt-5 inline-flex items-center gap-2 bg-white text-forest-700 rounded-full px-4 py-2 text-sm font-semibold w-fit">
+        <a href="tel:+212650671855" class="mt-5 inline-flex items-center gap-2 bg-white text-forest-700 rounded-full px-4 py-2 text-sm font-semibold w-fit dark:bg-slate-800 dark:text-forest-300">
           06 50 67 18 55
         </a>
       </div>
     </div>
     <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-[#48D1CC] to-transparent my-6"></div>
     <!--/////////////////////////////////-->
-<div class="service-card md:col-span-3 bg-white rounded-xl px-7 py-6 shadow-sm border border-forest-100 flex flex-col md:flex-row-reverse items-center justify-between gap-6">
+<div class="service-card md:col-span-3 bg-white rounded-xl px-7 py-6 shadow-sm border border-forest-100 flex flex-col md:flex-row-reverse items-center justify-between gap-6 dark:bg-slate-800 dark:border-slate-700/50">
   
   <div class="flex-1 w-full">
-    <div class="w-11 h-11 rounded-lg bg-forest-100 flex items-center justify-center mb-3">
-      <i data-lucide="plane" class="w-5 h-5 text-forest-600"></i>
+    <div class="w-11 h-11 rounded-lg bg-forest-100 flex items-center justify-center mb-3 dark:bg-slate-700/40">
+      <i data-lucide="plane" class="w-5 h-5 text-forest-600 dark:text-forest-300"></i>
     </div>
     
-    <h3 class="font-serif text-lg md:text-xl text-forest-900 mb-1">Transport Médicalisé</h3>
+    <h3 class="font-serif text-lg md:text-xl text-forest-900 mb-1 dark:text-white">Transport Médicalisé</h3>
     <p class="ar text-forest-500 text-sm mb-2">النقل الطبي للمرضى</p>
-    <p class="text-ink/70 text-sm leading-relaxed">
+    <p class="text-ink/70 text-sm leading-relaxed dark:text-slate-400">
       Prise en charge et accompagnement médicalisé sécurisé lors des transferts de patients, avec surveillance continue pour les cas urgents ou nécessitant des soins spécifiques.
     </p>
   </div>
 
-  <div class="w-full md:w-1/3 h-40 md:h-44 rounded-lg overflow-hidden flex-shrink-0 border border-forest-100">
+  <div class="w-full md:w-1/3 h-40 md:h-44 rounded-lg overflow-hidden flex-shrink-0 border border-forest-100 dark:border-slate-700/50">
     <img src="images/sami-specialite.jpeg" alt="Transport Médicalisé" class="w-full h-full object-cover">
   </div>
 
@@ -418,8 +475,8 @@
 <section id="cabinet" class="max-w-7xl mx-auto px-6 py-20">
   <div class="text-center max-w-2xl mx-auto mb-14">
     <div class="divider-leaf mx-auto mb-4"></div>
-    <h2 class="font-serif text-3xl md:text-4xl text-forest-900">Découvrez le Cabinet</h2>
-    <p class="text-ink/70 mt-4">Un espace calme et moderne, pensé pour votre confort et votre prise en charge.</p>
+    <h2 class="font-serif text-3xl md:text-4xl text-forest-900 dark:text-white">Découvrez le Cabinet</h2>
+    <p class="text-ink/70 mt-4 dark:text-slate-400">Un espace calme et moderne, pensé pour votre confort et votre prise en charge.</p>
   </div>
 
   <div class="grid md:grid-cols-3 gap-5">
@@ -456,44 +513,44 @@
 
   <div id="lightbox" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300">
     <button id="lightbox-close" class="absolute top-5 right-5 text-white text-3xl font-bold hover:opacity-75 focus:outline-none">&times;</button>
-    <div class="relative max-w-4xl max-h-[90vh] bg-white rounded-xl overflow-hidden shadow-2xl">
+    <div class="relative max-w-4xl max-h-[90vh] bg-white rounded-xl overflow-hidden shadow-2xl dark:bg-slate-800">
       <img id="lightbox-img" src="" alt="" class="max-w-full max-h-[80vh] object-contain mx-auto">
-      <p id="lightbox-caption" class="p-3 text-center text-forest-900 font-medium bg-white"></p>
+      <p id="lightbox-caption" class="p-3 text-center text-forest-900 font-medium bg-white dark:text-white dark:bg-slate-800"></p>
     </div>
   </div>
 </section>
 <!-- 28 7 24 22 23 25 -->
 <!-- ============ TESTIMONIALS ============ -->
-<section id="avis" class="bg-forest-50 py-20">
+<section id="avis" class="bg-forest-50 py-20 dark:bg-slate-800/60">
   <div class="max-w-7xl mx-auto px-6">
     <div class="text-center max-w-2xl mx-auto mb-14">
       <div class="divider-leaf mx-auto mb-4"></div>
-      <h2 class="font-serif text-3xl md:text-4xl text-forest-900">Avis de Nos Patients</h2>
+      <h2 class="font-serif text-3xl md:text-4xl text-forest-900 dark:text-white">Avis de Nos Patients</h2>
       <div class="flex items-center justify-center gap-1 mt-3">
         <i data-lucide="star" class="w-5 h-5 fill-clay text-clay"></i>
         <i data-lucide="star" class="w-5 h-5 fill-clay text-clay"></i>
         <i data-lucide="star" class="w-5 h-5 fill-clay text-clay"></i>
         <i data-lucide="star" class="w-5 h-5 fill-clay text-clay"></i>
         <i data-lucide="star" class="w-5 h-5 fill-clay text-clay"></i>
-        <span class="ml-2 text-sm text-ink/70">Avis Google</span>
+        <span class="ml-2 text-sm text-ink/70 dark:text-slate-400">Avis Google</span>
       </div>
     </div>
 
     <div class="grid md:grid-cols-3 gap-6">
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-forest-100">
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-forest-100 dark:bg-slate-800 dark:border-slate-700/50">
         <div class="flex gap-1 mb-3 text-clay"><i data-lucide="star" class="w-4 h-4 fill-clay"></i><i data-lucide="star" class="w-4 h-4 fill-clay"></i><i data-lucide="star" class="w-4 h-4 fill-clay"></i><i data-lucide="star" class="w-4 h-4 fill-clay"></i><i data-lucide="star" class="w-4 h-4 fill-clay"></i></div>
-        <p class="text-ink/80 text-sm mb-4">« Un excellent médecin, très accueillant, à l’écoute et surtout très attentif à ses patients. Il prend le temps d’écouter et d’expliquer les choses avec beaucoup de patience et de professionnalisme. On se sent vraiment en confiance dès le premier contact. Le cabinet est également très agréable, propre et chaleureux. Une très bonne expérience, je recommande vivement ce médecin ! »</p>
-        <p class="font-semibold text-forest-900 text-sm">Mohamed jbilo.</p>
+        <p class="text-ink/80 text-sm mb-4 dark:text-slate-300">« Un excellent médecin, très accueillant, à l’écoute et surtout très attentif à ses patients. Il prend le temps d’écouter et d’expliquer les choses avec beaucoup de patience et de professionnalisme. On se sent vraiment en confiance dès le premier contact. Le cabinet est également très agréable, propre et chaleureux. Une très bonne expérience, je recommande vivement ce médecin ! »</p>
+        <p class="font-semibold text-forest-900 text-sm dark:text-white">Mohamed jbilo.</p>
       </div>
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-forest-100">
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-forest-100 dark:bg-slate-800 dark:border-slate-700/50">
         <div class="flex gap-1 mb-3 text-clay"><i data-lucide="star" class="w-4 h-4 fill-clay"></i><i data-lucide="star" class="w-4 h-4 fill-clay"></i><i data-lucide="star" class="w-4 h-4 fill-clay"></i><i data-lucide="star" class="w-4 h-4 fill-clay"></i><i data-lucide="star" class="w-4 h-4 fill-clay"></i></div>
-        <p class="text-ink/80 text-sm mb-4">« Excellent médecin, vraiment exceptionnel ! Très professionnel, à l’écoute, bienveillant et humain. Il prend le temps d’écouter, d’expliquer clairement et de rassurer ses patients. On se sent immédiatement en confiance et très bien pris en charge.<br><br>Sans aucun doute l’un des meilleurs médecins que j’ai rencontrés. Je recommande ce cabinet les yeux fermés ! »</p>
-        <p class="font-semibold text-forest-900 text-sm">Kamal lbima .</p>
+        <p class="text-ink/80 text-sm mb-4 dark:text-slate-300">« Excellent médecin, vraiment exceptionnel ! Très professionnel, à l’écoute, bienveillant et humain. Il prend le temps d’écouter, d’expliquer clairement et de rassurer ses patients. On se sent immédiatement en confiance et très bien pris en charge.<br><br>Sans aucun doute l’un des meilleurs médecins que j’ai rencontrés. Je recommande ce cabinet les yeux fermés ! »</p>
+        <p class="font-semibold text-forest-900 text-sm dark:text-white">Kamal lbima .</p>
       </div>
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-forest-100">
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-forest-100 dark:bg-slate-800 dark:border-slate-700/50">
         <div class="flex gap-1 mb-3 text-clay"><i data-lucide="star" class="w-4 h-4 fill-clay"></i><i data-lucide="star" class="w-4 h-4 fill-clay"></i><i data-lucide="star" class="w-4 h-4 fill-clay"></i><i data-lucide="star" class="w-4 h-4 fill-clay"></i><i data-lucide="star" class="w-4 h-4 fill-clay"></i></div>
-        <p class="text-ink/80 text-sm mb-4">« Un grand merci au docteur Sami Khettab pour sa compétence et son écoute. Accueil impeccable, délais raisonnables et suivi de qualité. Je recommande les yeux fermés ce cabinet ! »</p>
-        <p class="font-semibold text-forest-900 text-sm">Ouassim Bouassab.</p>
+        <p class="text-ink/80 text-sm mb-4 dark:text-slate-300">« Un grand merci au docteur Sami Khettab pour sa compétence et son écoute. Accueil impeccable, délais raisonnables et suivi de qualité. Je recommande les yeux fermés ce cabinet ! »</p>
+        <p class="font-semibold text-forest-900 text-sm dark:text-white">Ouassim Bouassab.</p>
       </div>
     </div>
 
@@ -510,41 +567,41 @@
 <section id="rdv" class="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12">
   <div>
     <div class="divider-leaf mb-4"></div>
-    <h2 class="font-serif text-3xl md:text-4xl text-forest-900 mb-2">Prendre Rendez-vous</h2>
-    <p class="ar text-forest-600 mb-5">أخذ موعد</p>
-    <p class="text-ink/80 leading-relaxed mb-6">
+    <h2 class="font-serif text-3xl md:text-4xl text-forest-900 mb-2 dark:text-white">Prendre Rendez-vous</h2>
+    <p class="ar text-forest-600 mb-5 dark:text-forest-300">أخذ موعد</p>
+    <p class="text-ink/80 leading-relaxed mb-6 dark:text-slate-300">
       Remplissez le formulaire ci-contre, ou contactez-nous directement par téléphone ou WhatsApp
       pour une réponse rapide.
     </p>
     <div class="space-y-4">
-      <a href="tel:+212650671855" class="flex items-center gap-4 bg-white rounded-xl p-4 border border-forest-100 shadow-sm hover:shadow-md transition">
-        <div class="w-11 h-11 rounded-full bg-forest-100 flex items-center justify-center"><i data-lucide="phone" class="w-5 h-5 text-forest-600"></i></div>
-        <div><p class="font-semibold text-forest-900">Téléphone</p><p class="text-sm text-ink/60">06 50 67 18 55</p></div>
+      <a href="tel:+212650671855" class="flex items-center gap-4 bg-white rounded-xl p-4 border border-forest-100 shadow-sm hover:shadow-md transition dark:bg-slate-800 dark:border-slate-700/50">
+        <div class="w-11 h-11 rounded-full bg-forest-100 flex items-center justify-center dark:bg-slate-700/40"><i data-lucide="phone" class="w-5 h-5 text-forest-600 dark:text-forest-300"></i></div>
+        <div><p class="font-semibold text-forest-900 dark:text-white">Téléphone</p><p class="text-sm text-ink/60 dark:text-slate-400">06 50 67 18 55</p></div>
       </a>
-      <a href="https://wa.me/212650671855" target="_blank" rel="noopener" class="flex items-center gap-4 bg-white rounded-xl p-4 border border-forest-100 shadow-sm hover:shadow-md transition">
-        <div class="w-11 h-11 rounded-full bg-forest-100 flex items-center justify-center"><i data-lucide="message-circle" class="w-5 h-5 text-forest-600"></i></div>
-        <div><p class="font-semibold text-forest-900">WhatsApp</p><p class="text-sm text-ink/60">Réservation rapide en ligne</p></div>
+      <a href="https://wa.me/212650671855" target="_blank" rel="noopener" class="flex items-center gap-4 bg-white rounded-xl p-4 border border-forest-100 shadow-sm hover:shadow-md transition dark:bg-slate-800 dark:border-slate-700/50">
+        <div class="w-11 h-11 rounded-full bg-forest-100 flex items-center justify-center dark:bg-slate-700/40"><i data-lucide="message-circle" class="w-5 h-5 text-forest-600 dark:text-forest-300"></i></div>
+        <div><p class="font-semibold text-forest-900 dark:text-white">WhatsApp</p><p class="text-sm text-ink/60 dark:text-slate-400">Réservation rapide en ligne</p></div>
       </a>
-      <div class="flex items-center gap-4 bg-white rounded-xl p-4 border border-forest-100 shadow-sm">
-        <div class="w-11 h-11 rounded-full bg-forest-100 flex items-center justify-center"><i data-lucide="clock" class="w-5 h-5 text-forest-600"></i></div>
-        <div><p class="font-semibold text-forest-900">Horaires</p><p class="text-sm text-ink/60">Lun – Sam, 9h – 19h · Urgences 24/7</p></div>
+      <div class="flex items-center gap-4 bg-white rounded-xl p-4 border border-forest-100 shadow-sm dark:bg-slate-800 dark:border-slate-700/50">
+        <div class="w-11 h-11 rounded-full bg-forest-100 flex items-center justify-center dark:bg-slate-700/40"><i data-lucide="clock" class="w-5 h-5 text-forest-600 dark:text-forest-300"></i></div>
+        <div><p class="font-semibold text-forest-900 dark:text-white">Horaires</p><p class="text-sm text-ink/60 dark:text-slate-400">Lun – Sam, 9h – 19h · Urgences 24/7</p></div>
       </div>
     </div>
   </div>
 
-<form id="rdv-form" class="bg-white rounded-2xl p-8 shadow-md border border-forest-100 space-y-4">
-  <h3 class="font-serif text-xl text-forest-900 mb-2">Formulaire de Confirmation</h3>
+<form id="rdv-form" class="bg-white rounded-2xl p-8 shadow-md border border-forest-100 space-y-4 dark:bg-slate-800 dark:border-slate-700/50">
+  <h3 class="font-serif text-xl text-forest-900 mb-2 dark:text-white">Formulaire de Confirmation</h3>
   <div>
-    <label class="block text-sm font-medium text-ink/70 mb-1">Nom complet</label>
-    <input id="rdv-nom" type="text" required placeholder="Votre nom" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream">
+    <label class="block text-sm font-medium text-ink/70 mb-1 dark:text-slate-400">Nom complet</label>
+    <input id="rdv-nom" type="text" required placeholder="Votre nom" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream dark:border-slate-700/50 dark:bg-slate-900">
   </div>
   <div>
-    <label class="block text-sm font-medium text-ink/70 mb-1">Téléphone</label>
-    <input id="rdv-tel" type="tel" required placeholder="06 XX XX XX XX" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream">
+    <label class="block text-sm font-medium text-ink/70 mb-1 dark:text-slate-400">Téléphone</label>
+    <input id="rdv-tel" type="tel" required placeholder="06 XX XX XX XX" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream dark:border-slate-700/50 dark:bg-slate-900">
   </div>
   <div>
-    <label class="block text-sm font-medium text-ink/70 mb-1">Motif de consultation</label>
-    <select id="rdv-motif" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream">
+    <label class="block text-sm font-medium text-ink/70 mb-1 dark:text-slate-400">Motif de consultation</label>
+    <select id="rdv-motif" class="w-full border border-forest-100 rounded-lg px-4 py-2.5 bg-cream dark:border-slate-700/50 dark:bg-slate-900">
       <option>Médecine générale</option>
       <option>Urgence</option>
       <option>Suivi diabète</option>
@@ -556,10 +613,10 @@
   
   <!-- Créneau souhaité avec Calendar Picker -->
   <div>
-    <label class="block text-sm font-medium text-ink/70 mb-1">Créneau souhaité</label>
+    <label class="block text-sm font-medium text-ink/70 mb-1 dark:text-slate-400">Créneau souhaité</label>
     <div class="relative cursor-pointer">
-      <input id="rdv-date" type="text" placeholder="Sélectionnez la date" readonly class="w-full border border-forest-100 rounded-lg pl-4 pr-10 py-2.5 bg-cream cursor-pointer focus:outline-none">
-      <div id="calendar-trigger" class="absolute right-3 top-1/2 -translate-y-1/2 text-forest-600 hover:text-[#48D1CC] transition cursor-pointer">
+      <input id="rdv-date" type="text" placeholder="Sélectionnez la date" readonly class="w-full border border-forest-100 rounded-lg pl-4 pr-10 py-2.5 bg-cream cursor-pointer focus:outline-none dark:border-slate-700/50 dark:bg-slate-900">
+      <div id="calendar-trigger" class="absolute right-3 top-1/2 -translate-y-1/2 text-forest-600 hover:text-[#48D1CC] transition cursor-pointer dark:text-forest-300">
         <i data-lucide="calendar" class="w-5 h-5"></i>
       </div>
     </div>
@@ -572,17 +629,17 @@
 </section>
 
 <!-- ============ MAP ============ -->
-<section id="carte" class="bg-sand py-20">
+<section id="carte" class="bg-sand py-20 dark:bg-slate-950">
   <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
     <div>
       <div class="divider-leaf mb-4"></div>
-      <h2 class="font-serif text-3xl md:text-4xl text-forest-900 mb-4">Où nous trouver</h2>
-      <p class="text-ink/80 mb-6">Cabinet TabibeKoum, Dr Khettab Sami — situé à Tanger, facilement accessible.</p>
+      <h2 class="font-serif text-3xl md:text-4xl text-forest-900 mb-4 dark:text-white">Où nous trouver</h2>
+      <p class="text-ink/80 mb-6 dark:text-slate-300">Cabinet TabibeKoum, Dr Khettab Sami — situé à Tanger, facilement accessible.</p>
       <a href="https://maps.app.goo.gl/fn7MqcrKXWJLydew6" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-forest-600 hover:bg-forest-700 text-white px-6 py-3 rounded-full font-semibold transition">
         <i data-lucide="map-pin" class="w-5 h-5"></i> Ouvrir dans Google Maps
       </a>
     </div>
-    <div class="rounded-2xl overflow-hidden shadow-md border border-forest-100 h-72">
+    <div class="rounded-2xl overflow-hidden shadow-md border border-forest-100 h-72 dark:border-slate-700/50">
     <iframe 
       src="https://www.google.com/maps?q=Cabinet+de+m%C3%A9decine+g%C3%A9n%C3%A9rale+Dr+KHETTAB+SAMI+Tanger&output=embed" 
       width="100%" 
@@ -623,35 +680,35 @@
       <p class="font-semibold mb-3">Réseaux Sociaux</p>
       <div class="flex gap-3">
         <!-- YouTube -->
-        <a href="https://youtube.com/@drsamikhettab?si=0jKLOaReuKKaPsd5" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" title="YouTube">
+        <a href="https://youtube.com/@drsamikhettab?si=0jKLOaReuKKaPsd5" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors dark:bg-slate-800/10" title="YouTube">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
             <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
           </svg>
         </a>
 
         <!-- Facebook -->
-        <a href="https://www.facebook.com/share/1CYm7PZu9N/" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" title="Facebook">
+        <a href="https://www.facebook.com/share/1CYm7PZu9N/" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors dark:bg-slate-800/10" title="Facebook">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
             <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
           </svg>
         </a>
 
         <!-- Instagram 1 (TabibeKoum) -->
-        <a href="https://www.instagram.com/tabibekoum?stkn=MTZrYmhpbjBrcmYxdg==" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" title="Instagram TabibeKoum">
+        <a href="https://www.instagram.com/tabibekoum?stkn=MTZrYmhpbjBrcmYxdg==" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors dark:bg-slate-800/10" title="Instagram TabibeKoum">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
           </svg>
         </a>
 
         <!-- Instagram 2 (Cabinet Dr Khettab Sami) -->
-        <a href="https://www.instagram.com/cabinet.dr.khettab.sami?stkn=MXA2MW5waHl4dzVvaA==" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" title="Instagram Cabinet">
+        <a href="https://www.instagram.com/cabinet.dr.khettab.sami?stkn=MXA2MW5waHl4dzVvaA==" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors dark:bg-slate-800/10" title="Instagram Cabinet">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
           </svg>
         </a>
 
         <!-- TikTok -->
-        <a href="https://www.tiktok.com/@drsamikhettab?_r=1&_t=ZS-99d1Uz6munK" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" title="TikTok">
+        <a href="https://www.tiktok.com/@drsamikhettab?_r=1&_t=ZS-99d1Uz6munK" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors dark:bg-slate-800/10" title="TikTok">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
             <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.18-1.18 2.08a3.98 3.98 0 003.98 3.98c2.21 0 4-1.79 4-4V.02h-2.53z"/>
           </svg>
